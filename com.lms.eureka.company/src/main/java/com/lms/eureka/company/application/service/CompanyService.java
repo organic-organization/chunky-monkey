@@ -38,7 +38,7 @@ public class CompanyService {
         if (search == null || search.trim().isEmpty()) {
             return companyRepository.findCompaniesBy(pageable);
         }
-        return companyRepository.searchCompaniesBy(search, pageable);
+        return companyRepository.findCompaniesByName(search, pageable);
     }
 
     @Transactional(readOnly = true)

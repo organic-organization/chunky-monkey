@@ -51,7 +51,7 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
     }
 
     @Override
-    public Page<CompanyReadResponse> searchCompaniesBy(String search, Pageable pageable) {
+    public Page<CompanyReadResponse> findCompaniesByName(String search, Pageable pageable) {
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers();
 
         BooleanExpression predicate = company.name.contains(search);

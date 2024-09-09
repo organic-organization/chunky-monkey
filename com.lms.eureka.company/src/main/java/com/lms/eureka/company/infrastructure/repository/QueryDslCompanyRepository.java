@@ -11,5 +11,5 @@ public interface QueryDslCompanyRepository {
 
     Page<CompanyReadResponse> findCompaniesBy(Pageable pageable);
 
-    Page<CompanyReadResponse> searchCompaniesBy(@Param("search") String search, Pageable pageable);
+    Page<CompanyReadResponse> findCompaniesByName(String search, Pageable pageable);
 }
