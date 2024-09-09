@@ -5,6 +5,5 @@ import com.lms.eureka.hub.domain.repository.HubRepository;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface HubJpaRepository extends JpaRepository<Hub, UUID>, HubRepository {
-
+public interface HubJpaRepository extends JpaRepository<Hub, UUID>, HubQuerydslRepository, HubRepository {
 }

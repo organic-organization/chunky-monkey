@@ -24,6 +24,7 @@ repositories {
 }
 
 ext {
+	set('querydslVersion', "5.0.0")
 	set('springCloudVersion', "2023.0.3")
 }
 
@@ -47,6 +48,12 @@ dependencies {
 	// MapStruct
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+	// Querydsl
+	implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
+	annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 dependencyManagement {
@@ -57,4 +64,9 @@ dependencyManagement {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+def querydslSrcDir = 'src/main/generated'
+clean {
+	delete file(querydslSrcDir)
 }

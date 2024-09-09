@@ -11,4 +11,5 @@ public class HubException extends RuntimeException{
         super(exceptionCase.getMessage());
         this.exceptionCase = exceptionCase;
     }
+
 }
