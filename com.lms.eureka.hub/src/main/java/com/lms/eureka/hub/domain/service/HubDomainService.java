@@ -1,8 +1,11 @@
 package com.lms.eureka.hub.domain.service;
 
+import com.lms.eureka.hub.domain.exception.HubException;
+import com.lms.eureka.hub.domain.exception.HubExceptionCase;
 import com.lms.eureka.hub.domain.model.Hub;
 import com.lms.eureka.hub.domain.repository.HubRepository;
 import com.lms.eureka.hub.presentation.request.CreateHubRequest;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,12 @@ public class HubDomainService {
                 requestParam.longitude(),
                 requestParam.routeIndex());
         hubRepository.save(hub);
+        return hub;
+    }
+
+    public Hub findHub(UUID hubId) {
+        Hub hub = hubRepository.findById(hubId)
+                .orElseThrow(() -> new HubException(HubExceptionCase.HUB_NOT_FOUND));
         return hub;
     }
 

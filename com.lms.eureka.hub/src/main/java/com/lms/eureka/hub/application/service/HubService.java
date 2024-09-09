@@ -5,6 +5,7 @@ import com.lms.eureka.hub.application.dto.mapper.HubMapper;
 import com.lms.eureka.hub.domain.model.Hub;
 import com.lms.eureka.hub.domain.service.HubDomainService;
 import com.lms.eureka.hub.presentation.request.CreateHubRequest;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,13 @@ public class HubService {
     @Transactional
     public HubDto createHub(CreateHubRequest requestParam) {
         Hub hub = hubDomainService.createHub(requestParam);
-        return hubMapper.toResponse(hub);
+        return hubMapper.toDto(hub);
+    }
+
+    @Transactional(readOnly = true)
+    public HubDto findHub(UUID hubId) {
+        Hub hub = hubDomainService.findHub(hubId);
+        return hubMapper.toDto(hub);
     }
 
 }
