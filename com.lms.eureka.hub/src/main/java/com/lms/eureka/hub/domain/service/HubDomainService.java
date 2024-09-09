@@ -5,8 +5,11 @@ import com.lms.eureka.hub.domain.exception.HubExceptionCase;
 import com.lms.eureka.hub.domain.model.Hub;
 import com.lms.eureka.hub.domain.repository.HubRepository;
 import com.lms.eureka.hub.presentation.request.CreateHubRequest;
+import com.lms.eureka.hub.presentation.request.SearchHubRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,9 +30,12 @@ public class HubDomainService {
     }
 
     public Hub findHub(UUID hubId) {
-        Hub hub = hubRepository.findById(hubId)
+        return hubRepository.findById(hubId)
                 .orElseThrow(() -> new HubException(HubExceptionCase.HUB_NOT_FOUND));
-        return hub;
+    }
+
+    public Page<Hub> searchHub(SearchHubRequest requestParam, Pageable pageable) {
+        return hubRepository.searchHub(requestParam, pageable);
     }
 
 }
