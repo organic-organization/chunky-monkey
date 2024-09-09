@@ -6,5 +6,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface HubMapper {
-    HubDto toResponse(Hub hub);
+    HubDto toDto(Hub hub);
 }
