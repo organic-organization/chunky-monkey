@@ -3,23 +3,28 @@ package com.lms.eureka.gateway.infra.jwt;
 import com.lms.eureka.gateway.domain.model.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Base64;
 
 @Slf4j
 @Component
 public class JwtUtil {
-
     public static final String AUTHORIZATION_KEY = "auth";
 
-    private final Key jwtSecretKey;
+    @Value("${jwt.secret.key}") // Base64 Encode 한 SecretKey
+    private String secretKey;
+    private Key jwtSecretKey;
 
-    public JwtUtil(@Value("${jwt.secret.key}") String secretKey) {
-        this.jwtSecretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    @PostConstruct
+    public void init() {
+        byte[] bytes = Base64.getDecoder().decode(secretKey);
+        jwtSecretKey = Keys.hmacShaKeyFor(bytes);
     }
 
     // 토큰 유효성 검사
