@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,8 +24,7 @@ public class HubService {
     private final HubMapper hubMapper;
     private final UserClient userClient;
 
-    @Transactional
-    public HubDto createHub(String username, CreateHubRequest requestParam) {
+    public HubDto createHub(CreateHubRequest requestParam, String username) {
         checkUserExists(username);
         Hub hub = hubDomainService.createHub(requestParam, username);
         return hubMapper.toDto(hub);
@@ -38,7 +36,6 @@ public class HubService {
         }
     }
 
-    @Transactional(readOnly = true)
     public HubDto findHub(UUID hubId) {
         Hub hub = hubDomainService.findHub(hubId);
         return hubMapper.toDto(hub);
@@ -47,6 +44,12 @@ public class HubService {
     public Page<HubDto> searchHub(SearchHubRequest requestParam, Pageable pageable) {
         Page<Hub> hubPage = hubDomainService.searchHub(requestParam, pageable);
         return hubPage.map(hubMapper::toDto);
+    }
+
+    public HubDto deleteHub(UUID hubId, String username) {
+        checkUserExists(username);
+        Hub hub = hubDomainService.deleteHub(hubId, username);
+        return hubMapper.toDto(hub);
     }
 
 }

@@ -34,9 +34,9 @@ public class BaseEntity {
     @Column(name="deleted_by")
     private String deletedBy;
 
-    public void setDeleted(LocalDateTime deletedAt, String deletedBy) {
-        this.deletedAt = deletedAt;
-        this.deletedBy = deletedBy;
+    public void setDeletedBy(String username) {
+        this.deletedAt = LocalDateTime.now();
+        this.deletedBy = username;
     }
 
     public void setCreatedBy(String username) {
