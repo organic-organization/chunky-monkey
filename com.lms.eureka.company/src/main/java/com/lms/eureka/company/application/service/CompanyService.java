@@ -7,10 +7,7 @@ import com.lms.eureka.company.domain.model.Company;
 import com.lms.eureka.company.domain.model.Product;
 import com.lms.eureka.company.domain.repository.CompanyRepository;
 import com.lms.eureka.company.domain.repository.ProductRepository;
-import com.lms.eureka.company.presentation.request.CompanyCreateRequest;
-import com.lms.eureka.company.presentation.request.CompanyDeleteRequest;
-import com.lms.eureka.company.presentation.request.CompanyProductCreateRequest;
-import com.lms.eureka.company.presentation.request.CompanyUpdateRequest;
+import com.lms.eureka.company.presentation.request.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,12 +25,13 @@ public class CompanyService {
     private final ProductRepository productRepository;
 
     @Transactional
-    public void createCompany(CompanyCreateRequest companyCreateRequest) {
+    public String createCompany(CompanyCreateRequest companyCreateRequest) {
 
         if (companyRepository.findByName(companyCreateRequest.name()).isPresent()) {
             throw new RuntimeException("중복된 업체의 이름입니다.");
         }
         companyRepository.save(new Company(companyCreateRequest));
+        return "업체 추가 완료.";
     }
 
     @Transactional(readOnly = true)
@@ -87,5 +85,17 @@ public class CompanyService {
             return productRepository.findCompanyProductsBy(companyId, pageable);
         }
         return productRepository.findCompanyProductsByName(search, companyId, pageable);
+    }
+
+    @Transactional
+    public CompanyProductReadResponse modifyCompanyProduct(UUID companyId, UUID productId, CompanyProductUpdateRequest companyProductUpdateRequest) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("유효한 업체 id가 아닙니다."));
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("유효한 상품 id가 아닙니다."));
+
+        product.update(companyProductUpdateRequest);
+        return new CompanyProductReadResponse(product.getId(), product.getName(), product.getPrice(), product.getStock());
     }
 }
