@@ -41,15 +41,20 @@ public class Company extends BaseEntity{
     public Company(CompanyCreateRequest companyCreateRequest) {
         this.name = companyCreateRequest.name();
         this.address = companyCreateRequest.address();
+        this.type = CompanyType.valueOf(companyCreateRequest.companyType());
         this.hubId = companyCreateRequest.hubId();
     }
 
     public void update(CompanyUpdateRequest companyUpdateRequest) {
-        this.name = companyUpdateRequest.name();
-    }
-
-    public void delete() {
-//        this.isDeleted = true;
+        if (companyUpdateRequest.name() != null) {
+            this.name = companyUpdateRequest.name();
+        }
+        if (companyUpdateRequest.address() != null) {
+            this.address = companyUpdateRequest.address();
+        }
+        if (companyUpdateRequest.companyType() != null) {
+            this.type = CompanyType.valueOf(companyUpdateRequest.companyType());
+        }
     }
 
 }
