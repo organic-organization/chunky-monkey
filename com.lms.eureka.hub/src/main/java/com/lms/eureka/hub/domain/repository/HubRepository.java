@@ -11,4 +11,7 @@ public interface HubRepository {
     Hub save(Hub hub);
     Optional<Hub> findById(UUID hubId);
     Page<Hub> searchHub(SearchHubRequest requestParam, Pageable pageable);
+    Optional<Hub> findByName(String name);
+    Optional<Hub> findByAddress(String address);
+    Optional<Hub> findByRouteIndex(long routeIndex);
 }

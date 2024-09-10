@@ -21,6 +21,7 @@ public class HubDomainService {
 
     @Transactional
     public Hub createHub(CreateHubRequest requestParam, String username) {
+        checkDuplicateField(requestParam);
         Hub hub = Hub.create(
                 requestParam.name(),
                 requestParam.address(),
@@ -30,6 +31,18 @@ public class HubDomainService {
                 username);
         hubRepository.save(hub);
         return hub;
+    }
+
+    private void checkDuplicateField(CreateHubRequest requestParam) {
+        if (hubRepository.findByName(requestParam.name()).isPresent()){
+            throw new HubException(HubExceptionCase.DUPLICATE_NAME);
+        }
+        if (hubRepository.findByAddress(requestParam.address()).isPresent()) {
+            throw new HubException(HubExceptionCase.DUPLICATE_ADDRESS);
+        }
+        if (hubRepository.findByRouteIndex(requestParam.routeIndex()).isPresent()) {
+            throw new HubException(HubExceptionCase.DUPLICATE_ROUTE_INDEX);
+        }
     }
 
     @Transactional(readOnly = true)

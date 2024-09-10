@@ -1,6 +1,7 @@
 package com.lms.eureka.hub.domain.entity.hub;
 
 import com.lms.eureka.hub.domain.entity.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,9 +28,11 @@ public class Hub extends BaseEntity {
     private UUID id;
 
     @NotNull
+    @Column(unique = true)
     private String name;
 
     @NotNull
+    @Column(unique = true)
     private String address;
 
     @NotNull
@@ -39,6 +42,7 @@ public class Hub extends BaseEntity {
     private double longitude;
 
     @NotNull
+    @Column(unique = true)
     private long routeIndex;
 
     @NotNull
