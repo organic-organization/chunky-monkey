@@ -1,21 +1,23 @@
 package com.lms.eureka.company.application.service;
 
+import com.lms.eureka.company.application.dto.CompanyProductReadResponse;
 import com.lms.eureka.company.application.dto.CompanyReadResponse;
 import com.lms.eureka.company.application.dto.CompanyUpdateResponse;
 import com.lms.eureka.company.domain.model.Company;
+import com.lms.eureka.company.domain.model.Product;
 import com.lms.eureka.company.domain.repository.CompanyRepository;
-import com.lms.eureka.company.infrastructure.repository.JpaCompanyRepository;
-import com.lms.eureka.company.infrastructure.repository.QueryDslCompanyRepository;
+import com.lms.eureka.company.domain.repository.ProductRepository;
 import com.lms.eureka.company.presentation.request.CompanyCreateRequest;
 import com.lms.eureka.company.presentation.request.CompanyDeleteRequest;
+import com.lms.eureka.company.presentation.request.CompanyProductCreateRequest;
 import com.lms.eureka.company.presentation.request.CompanyUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -23,6 +25,7 @@ import java.util.UUID;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public void createCompany(CompanyCreateRequest companyCreateRequest) {
@@ -64,5 +67,25 @@ public class CompanyService {
                 .orElseThrow(() -> new RuntimeException("유효한 업체 id가 아닙니다."));
         company.delete();
         return companyDeleteRequest.id() + " 업체 삭제 완료.";
+    }
+
+    @Transactional
+    public String createCompanyProduct(UUID companyId, List<CompanyProductCreateRequest> companyProductCreateRequests) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("유효한 업체 id가 아닙니다."));
+        companyProductCreateRequests
+                .forEach(companyProductCreateRequest -> {
+                    productRepository.save(new Product(companyProductCreateRequest, company));
+                });
+        return "상품 추가 완료.";
+    }
+
+    public Page<CompanyProductReadResponse> findCompanyProducts(UUID companyId, String search, Pageable pageable) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException("유효한 업체 id가 아닙니다."));
+        if (search == null || search.trim().isEmpty()) {
+            return productRepository.findCompanyProductsBy(companyId, pageable);
+        }
+        return productRepository.findCompanyProductsByName(search, companyId, pageable);
     }
 }
