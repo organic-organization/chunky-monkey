@@ -44,14 +44,16 @@ public class Hub extends BaseEntity {
     private long routeIndex;
 
     public static Hub createHub(String name, String address, double latitude, double longitude,
-                                long routeIndex) {
-        return Hub.builder()
+                                long routeIndex, String username) {
+        Hub hub = Hub.builder()
                 .name(name)
                 .address(address)
                 .latitude(latitude)
                 .longitude(longitude)
                 .routeIndex(routeIndex)
                 .build();
+        hub.setCreatedBy(username);
+        return hub;
     }
 
 }
