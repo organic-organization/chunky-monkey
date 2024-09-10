@@ -1,5 +1,6 @@
-package com.lms.eureka.hub.domain.model;
+package com.lms.eureka.hub.domain.entity.hub;
 
+import com.lms.eureka.hub.domain.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

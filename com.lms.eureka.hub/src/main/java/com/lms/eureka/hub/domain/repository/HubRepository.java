@@ -1,6 +1,6 @@
 package com.lms.eureka.hub.domain.repository;
 
-import com.lms.eureka.hub.domain.model.Hub;
+import com.lms.eureka.hub.domain.entity.hub.Hub;
 import com.lms.eureka.hub.presentation.request.SearchHubRequest;
 import java.util.Optional;
 import java.util.UUID;
