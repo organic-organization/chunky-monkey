@@ -56,6 +56,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(
                 authorizeRequests -> authorizeRequests
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .requestMatchers("/api/user/**").permitAll()
                         .requestMatchers("/api/public/user/signUp").permitAll()
                         .requestMatchers("/api/public/user/login").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll() // Swagger UI 경로 접근 허용
