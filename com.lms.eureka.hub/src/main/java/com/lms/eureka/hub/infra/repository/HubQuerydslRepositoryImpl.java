@@ -27,7 +27,7 @@ public class HubQuerydslRepositoryImpl implements HubQuerydslRepository {
                         hubNameEq(requestParam.hubName()),
                         addressEq(requestParam.address())
                 )
-                .orderBy(hub.id.asc())
+                .orderBy(hub.routeIndex.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
