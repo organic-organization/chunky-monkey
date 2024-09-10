@@ -34,6 +34,7 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
                         company.name
                 )
                 .from(company)
+                .where(company.deletedBy.isNotNull())
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
@@ -54,15 +55,14 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
     public Page<CompanyReadResponse> findCompaniesByName(String search, Pageable pageable) {
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers();
 
-        BooleanExpression predicate = company.name.contains(search);
-
         JPAQuery<Tuple> query = jpaQueryFactory
                 .select(
                         company.id,
                         company.name
                 )
                 .from(company)
-                .where(predicate)
+                .where(company.deletedBy.isNotNull())
+                .where(company.name.contains(search))
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
