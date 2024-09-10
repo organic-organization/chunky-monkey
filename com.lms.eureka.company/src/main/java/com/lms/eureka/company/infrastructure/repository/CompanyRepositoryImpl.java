@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +32,8 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
         JPAQuery<Tuple> query = jpaQueryFactory
                 .select(
                         company.id,
-                        company.name
+                        company.name,
+                        company.createdAt
                 )
                 .from(company)
                 .where(company.deletedBy.isNotNull())
@@ -58,7 +60,8 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
         JPAQuery<Tuple> query = jpaQueryFactory
                 .select(
                         company.id,
-                        company.name
+                        company.name,
+                        company.createdAt
                 )
                 .from(company)
                 .where(company.deletedBy.isNotNull())
@@ -82,12 +85,13 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
     private CompanyReadResponse tupleToResponse(Tuple result) {
         UUID companyId = result.get(0, UUID.class);
         String name = result.get(1, String.class);
-        return new CompanyReadResponse(companyId, name);
+        LocalDateTime createdAt = result.get(2, LocalDateTime.class);
+        return new CompanyReadResponse(companyId, name, createdAt);
     }
 
     private List<OrderSpecifier<?>> getAllOrderSpecifiers() {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
-        orders.add(new OrderSpecifier<>(Order.ASC, company.name));
+        orders.add(new OrderSpecifier<>(Order.DESC, company.updatedAt));
         return orders;
     }
 }
