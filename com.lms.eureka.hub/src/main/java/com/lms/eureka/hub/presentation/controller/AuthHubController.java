@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,8 +22,9 @@ public class AuthHubController {
     private final HubService hubService;
 
     @PostMapping("/master/hubs")
-    public CommonResponse createHub(@Valid @RequestBody CreateHubRequest requestParam) {
-        HubDto hubDto = hubService.createHub(requestParam);
+    public CommonResponse createHub(@RequestHeader(value = "username", required = true) String username,
+                                    @Valid @RequestBody CreateHubRequest requestParam) {
+        HubDto hubDto = hubService.createHub(username, requestParam);
         return CommonResponse.success(HUB_CREATE.getMessage(), hubDto);
     }
 

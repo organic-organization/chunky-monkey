@@ -18,13 +18,14 @@ public class HubDomainService {
 
     private final HubRepository hubRepository;
 
-    public Hub createHub(CreateHubRequest requestParam) {
+    public Hub createHub(CreateHubRequest requestParam, String username) {
         Hub hub = Hub.createHub(
                 requestParam.name(),
                 requestParam.address(),
                 requestParam.latitude(),
                 requestParam.longitude(),
-                requestParam.routeIndex());
+                requestParam.routeIndex(),
+                username);
         hubRepository.save(hub);
         return hub;
     }
