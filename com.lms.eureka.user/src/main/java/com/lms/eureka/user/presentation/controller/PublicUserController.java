@@ -21,7 +21,7 @@ public class PublicUserController {
 
     @PostMapping("/signUp")
     public ResponseEntity<Boolean> signUp(
-            @Valid
+            //@Valid
             @RequestBody
             SignUpRequestDto request
     ){
