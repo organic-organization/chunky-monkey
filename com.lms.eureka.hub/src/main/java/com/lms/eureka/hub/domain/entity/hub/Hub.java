@@ -1,7 +1,6 @@
 package com.lms.eureka.hub.domain.entity.hub;
 
 import com.lms.eureka.hub.domain.entity.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +27,6 @@ public class Hub extends BaseEntity {
     private UUID id;
 
     @NotNull
-    @Column(unique = true)
     private String name;
 
     @NotNull
@@ -43,7 +41,10 @@ public class Hub extends BaseEntity {
     @NotNull
     private long routeIndex;
 
-    public static Hub createHub(String name, String address, double latitude, double longitude,
+    @NotNull
+    private Boolean isDeleted;
+
+    public static Hub create(String name, String address, double latitude, double longitude,
                                 long routeIndex, String username) {
         Hub hub = Hub.builder()
                 .name(name)
@@ -51,9 +52,15 @@ public class Hub extends BaseEntity {
                 .latitude(latitude)
                 .longitude(longitude)
                 .routeIndex(routeIndex)
+                .isDeleted(false)
                 .build();
         hub.setCreatedBy(username);
         return hub;
+    }
+
+    public void delete(String username) {
+        this.setDeletedBy(username);
+        this.isDeleted = true;
     }
 
 }
