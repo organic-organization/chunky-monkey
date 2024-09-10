@@ -3,7 +3,7 @@ package com.lms.eureka.hub.presentation.controller;
 import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_CREATE;
 
 import com.lms.eureka.hub.presentation.reponse.CommonResponse;
-import com.lms.eureka.hub.application.dto.HubDto;
+import com.lms.eureka.hub.application.dto.hub.HubDto;
 import com.lms.eureka.hub.application.service.HubService;
 import com.lms.eureka.hub.presentation.request.CreateHubRequest;
 import jakarta.validation.Valid;

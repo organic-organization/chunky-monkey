@@ -1,4 +1,4 @@
-package com.lms.eureka.hub.domain.model;
+package com.lms.eureka.hub.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

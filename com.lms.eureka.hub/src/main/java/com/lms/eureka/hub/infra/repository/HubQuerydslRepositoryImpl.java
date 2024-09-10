@@ -1,8 +1,8 @@
 package com.lms.eureka.hub.infra.repository;
 
-import static com.lms.eureka.hub.domain.model.QHub.hub;
+import static com.lms.eureka.hub.domain.entity.QHub.hub;
 
-import com.lms.eureka.hub.domain.model.Hub;
+import com.lms.eureka.hub.domain.entity.hub.Hub;
 import com.lms.eureka.hub.presentation.request.SearchHubRequest;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

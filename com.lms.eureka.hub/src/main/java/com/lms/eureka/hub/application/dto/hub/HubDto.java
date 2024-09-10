@@ -1,4 +1,4 @@
-package com.lms.eureka.hub.application.dto;
+package com.lms.eureka.hub.application.dto.hub;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
