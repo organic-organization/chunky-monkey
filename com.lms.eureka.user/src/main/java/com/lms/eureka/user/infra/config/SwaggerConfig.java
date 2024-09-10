@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-    private static final String BEARER_TOKEN = "Bearer";
+    private static final String BEARER_TOKEN = "Bearer ";
 
     @Bean
     public OpenAPI openAPI() {
