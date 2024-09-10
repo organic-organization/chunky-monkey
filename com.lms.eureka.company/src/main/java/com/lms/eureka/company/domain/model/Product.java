@@ -1,6 +1,7 @@
 package com.lms.eureka.company.domain.model;
 
 import com.lms.eureka.company.presentation.request.CompanyProductCreateRequest;
+import com.lms.eureka.company.presentation.request.CompanyProductUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,5 +43,17 @@ public class Product extends BaseEntity{
         this.stock = companyProductCreateRequest.stock();
         this.company = company;
         company.getProducts().add(this);
+    }
+
+    public void update(CompanyProductUpdateRequest companyProductUpdateRequest) {
+        if (companyProductUpdateRequest.name() != null) {
+            this.name = companyProductUpdateRequest.name();
+        }
+        if (companyProductUpdateRequest.price() != null) {
+            this.price = companyProductUpdateRequest.price();
+        }
+        if (companyProductUpdateRequest.stock() != null) {
+            this.stock = companyProductUpdateRequest.stock();
+        }
     }
 }
