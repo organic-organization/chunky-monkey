@@ -86,11 +86,18 @@ public class CompanyController {
     }
 
     @PutMapping("/{companyId}/products/{productId}")
-    public CommonResponse modifyCompanyProducts(@PathVariable(name = "companyId") UUID companyId,
+    public CommonResponse modifyCompanyProduct(@PathVariable(name = "companyId") UUID companyId,
                                                 @PathVariable(name = "productId") UUID productId,
                                                 @RequestBody CompanyProductUpdateRequest companyProductUpdateRequest) {
         return CommonResponse
                 .success(HttpStatus.OK, "상품 수정 완료", companyService.modifyCompanyProduct(companyId, productId, companyProductUpdateRequest));
+    }
+
+    @PutMapping("/{companyId}/products")
+    public CommonResponse deleteCompanyProducts(@PathVariable(name = "companyId") UUID companyId,
+                                                @RequestBody List<CompanyProductDeleteRequest> companyProductDeleteRequests) {
+        return CommonResponse
+                .success(HttpStatus.OK, companyService.deleteCompanyProducts(companyId, companyProductDeleteRequests));
     }
 
 }

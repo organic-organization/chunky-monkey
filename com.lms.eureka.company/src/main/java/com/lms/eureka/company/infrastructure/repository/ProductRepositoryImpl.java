@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +34,8 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
                         product.id,
                         product.name,
                         product.price,
-                        product.stock
+                        product.stock,
+                        product.createdAt
                 )
                 .from(product)
                 .where(product.deletedBy.isNotNull())
@@ -62,7 +64,9 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
                         product.id,
                         product.name,
                         product.price,
-                        product.stock
+                        product.stock,
+                        product.createdAt,
+                        product.updatedAt
                 )
                 .from(product)
                 .where(product.deletedBy.isNotNull())
@@ -88,13 +92,14 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
         String name = result.get(1, String.class);
         Integer price  = result.get(2, Integer.class);
         Integer stock = result.get(3, Integer.class);
-
-        return new CompanyProductReadResponse(id, name, price, stock);
+        LocalDateTime createdAt = result.get(4, LocalDateTime.class);
+        LocalDateTime updatedAt = result.get(5, LocalDateTime.class);
+        return new CompanyProductReadResponse(id, name, price, stock, createdAt, updatedAt);
     }
 
     private List<OrderSpecifier<?>> getAllOrderSpecifiers() {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
-        orders.add(new OrderSpecifier<>(Order.ASC, product.name));
+        orders.add(new OrderSpecifier<>(Order.DESC, product.updatedAt));
         return orders;
     }
 }
