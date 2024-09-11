@@ -24,8 +24,8 @@ import java.io.IOException;
 public class SlackService {
     private final SlackRepository slackRepository;
 
-    @Value("${slack.token}")
-    private String TOKEN;
+//    @Value("${slack.token}")
+    private final static String TOKEN = "xoxb-7706334136916-7689311230983-yaoKerPUXdXOqtKXRi0MgH01";
 
     public void sendCode(SlackDto dto) {
         Slack slack = Slack.getInstance();

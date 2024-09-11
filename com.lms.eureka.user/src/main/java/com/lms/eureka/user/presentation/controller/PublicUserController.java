@@ -1,8 +1,10 @@
 package com.lms.eureka.user.presentation.controller;
 
 import com.lms.eureka.user.application.service.UserService;
+import com.lms.eureka.user.presentation.request.FindPasswordRequestDto;
 import com.lms.eureka.user.presentation.request.LoginRequestDto;
 import com.lms.eureka.user.presentation.request.SignUpRequestDto;
+import com.lms.eureka.user.presentation.request.UpdatePasswordRequestDto;
 import com.lms.eureka.user.presentation.response.CommonResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -38,5 +40,17 @@ public class PublicUserController {
     ){
         userService.login(response, dto);
         return CommonResponse.success("로그인 성공");
+    }
+
+    @PostMapping("/find/password")
+    public CommonResponse<Void> findPassword(@RequestBody FindPasswordRequestDto dto) {
+        userService.findPassword(dto);
+        return CommonResponse.success("코드 보내기 성공");
+    }
+
+    @PostMapping("/update/password")
+    public CommonResponse<Void> updatePassword(@RequestBody UpdatePasswordRequestDto dto) {
+        userService.updatePassword(dto.code(), dto.toDto());
+        return CommonResponse.success("비밀번호 변경 성공");
     }
 }
