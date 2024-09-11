@@ -1,11 +1,14 @@
 package com.lms.eureka.company.application.service;
 
+import com.lms.eureka.company.application.dto.CompanyManagerReadResponse;
 import com.lms.eureka.company.application.dto.CompanyProductReadResponse;
 import com.lms.eureka.company.application.dto.CompanyReadResponse;
 import com.lms.eureka.company.application.dto.CompanyUpdateResponse;
 import com.lms.eureka.company.domain.model.Company;
+import com.lms.eureka.company.domain.model.CompanyManager;
 import com.lms.eureka.company.domain.model.Product;
 import com.lms.eureka.company.domain.repository.CompanyRepository;
+import com.lms.eureka.company.domain.repository.ManagerRepository;
 import com.lms.eureka.company.domain.repository.ProductRepository;
 import com.lms.eureka.company.presentation.request.*;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +26,7 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
     private final ProductRepository productRepository;
+    private final ManagerRepository managerRepository;
 
     @Transactional
     public String createCompany(CompanyCreateRequest companyCreateRequest) {
@@ -112,6 +115,45 @@ public class CompanyService {
                             .orElseThrow(() -> new RuntimeException(companyProductDeleteRequest.productId() + "는 유효한 상품 id가 아닙니다."));
                     product.delete("name");
                 });
-        return "상품 삭제 완료";
+        return "상품 삭제 완료.";
+    }
+
+    @Transactional
+    public String createCompanyManager(UUID companyId, CompanyManagerCreateRequest companyManagerCreateRequest) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
+        CompanyManager companyManager = new CompanyManager(company, companyManagerCreateRequest.userId());
+        managerRepository.save(companyManager);
+        return "업체 관리자 추가 완료.";
+    }
+
+    @Transactional
+    public Page<CompanyManagerReadResponse> findCompanyManagers(UUID companyId, Pageable pageable) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
+        return managerRepository.findCompanyManagersBy(pageable);
+    }
+
+    @Transactional
+    public CompanyManagerReadResponse findCompanyManager(UUID companyId, UUID managerId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
+        CompanyManager companyManager = managerRepository.findById(managerId)
+                .orElseThrow(() -> new RuntimeException(managerId + "는 유효한 업체 담당자 id가 아닙니다."));
+        return new CompanyManagerReadResponse(companyManager.getId(), company.getId(), companyManager.getUserId());
+    }
+
+    @Transactional
+    public String deleteCompanyManagers(UUID companyId, List<CompanyManagerDeleteRequest> companyManagerDeleteRequests) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
+        companyManagerDeleteRequests
+                .forEach(companyManagerDeleteRequest -> {
+                    UUID managerId = companyManagerDeleteRequest.id();
+                    CompanyManager companyManager = managerRepository.findById(managerId)
+                            .orElseThrow(() -> new RuntimeException(managerId + "는 유효한 업체 담당자 id가 아닙니다."));
+                    companyManager.delete("name");
+                });
+        return "업체 담당자 삭제 완료.";
     }
 }

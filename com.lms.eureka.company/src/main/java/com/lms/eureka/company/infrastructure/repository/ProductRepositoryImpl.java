@@ -4,6 +4,7 @@ import com.lms.eureka.company.application.dto.CompanyProductReadResponse;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
                         product.createdAt
                 )
                 .from(product)
-                .where(product.deletedBy.isNotNull())
+                .where(product.deletedBy.isNull())
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
@@ -67,8 +68,13 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
                         product.updatedAt
                 )
                 .from(product)
-                .where(product.deletedBy.isNotNull())
-                .where(product.name.contains(search))
+                .where(
+                        product.deletedAt.isNull()
+                        .and(
+                        Expressions.stringTemplate("function('lower', {0})", product.name)
+                        .contains(search.toLowerCase())
+                        )
+                )
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());

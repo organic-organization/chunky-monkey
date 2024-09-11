@@ -4,6 +4,7 @@ import com.lms.eureka.company.application.dto.CompanyReadResponse;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.lms.eureka.company.domain.model.QCompany.company;
+import static com.querydsl.core.types.dsl.Expressions.stringTemplate;
 
 @RequiredArgsConstructor
 public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
@@ -34,7 +36,7 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
                         company.createdAt
                 )
                 .from(company)
-                .where(company.deletedBy.isNotNull())
+                .where(company.deletedAt.isNull())
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
@@ -62,8 +64,15 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
                         company.createdAt
                 )
                 .from(company)
-                .where(company.deletedBy.isNotNull())
-                .where(company.name.contains(search))
+                .where(company.name.like("%" + search + "%")
+//                .where(stringTemplate("ILIKE({0}, {1})", company.name, "%" + search + "%"))
+//                                        .and(company.deletedBy.isNull())
+                                .and(company.deletedAt.isNull())
+//                        .and(
+//                        Expressions.stringTemplate("function('lower', {0})", company.name)
+//                        .contains(search.toLowerCase())
+//                        )
+                )
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
