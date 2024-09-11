@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: user-service
+
   h2:
     console:
       enabled: true
@@ -14,6 +15,17 @@ spring:
     url: jdbc:h2:mem:test;MODE=PostgreSQL
     username: sa
     password:
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
 # swagger
 springdoc:

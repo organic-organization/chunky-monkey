@@ -43,7 +43,8 @@
 # .idea/modules
 # *.iml
 # *.ipr
-
+.gradle
+build
 # CMake
 cmake-build-*/
 
