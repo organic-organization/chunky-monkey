@@ -1,4 +1,4 @@
-package com.lms.eureka.hub.presentation.controller;
+package com.lms.eureka.hub.presentation.controller.hub;
 
 import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_CREATE;
 import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_DELETE;
@@ -6,7 +6,7 @@ import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_DELETE;
 import com.lms.eureka.hub.presentation.reponse.CommonResponse;
 import com.lms.eureka.hub.application.dto.hub.HubDto;
 import com.lms.eureka.hub.application.service.HubService;
-import com.lms.eureka.hub.presentation.request.CreateHubRequest;
+import com.lms.eureka.hub.presentation.request.hub.CreateHubRequest;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;

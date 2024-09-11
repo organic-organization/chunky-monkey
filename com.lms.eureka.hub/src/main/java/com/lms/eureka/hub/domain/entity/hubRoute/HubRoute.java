@@ -1,11 +1,13 @@
-package com.lms.eureka.hub.domain.entity.hub;
+package com.lms.eureka.hub.domain.entity.hubRoute;
 
 import com.lms.eureka.hub.domain.entity.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
@@ -20,46 +22,38 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(access = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "p_hubs")
-public class Hub extends BaseEntity {
+@Table(name = "p_hub_routes")
+public class HubRoute extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotNull
-    @Column(unique = true)
-    private String name;
+    private UUID departureHubId;
 
     @NotNull
-    @Column(unique = true)
-    private String address;
+    private UUID arrivalHubId;
 
     @NotNull
-    private double latitude;
-
-    @NotNull
-    private double longitude;
-
-    @NotNull
-    @Column(unique = true)
-    private long routeIndex;
+    private long duration;
 
     @NotNull
     private Boolean isDelete;
 
-    public static Hub create(String name, String address, double latitude, double longitude,
-                                long routeIndex, String username) {
-        Hub hub = Hub.builder()
-                .name(name)
-                .address(address)
-                .latitude(latitude)
-                .longitude(longitude)
-                .routeIndex(routeIndex)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private HubRoute parent;
+
+    public static HubRoute create(UUID departureHubId, UUID arrivalHubId, long duration, String username) {
+        HubRoute hubRoute = HubRoute.builder()
+                .departureHubId(departureHubId)
+                .arrivalHubId(arrivalHubId)
+                .duration(duration)
                 .isDelete(false)
                 .build();
-        hub.setCreatedBy(username);
-        return hub;
+        hubRoute.setCreatedBy(username);
+        return hubRoute;
     }
 
     public void delete(String username) {

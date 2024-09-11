@@ -1,4 +1,4 @@
-package com.lms.eureka.hub.infra.repository;
+package com.lms.eureka.hub.infra.repository.hub;
 
 import com.lms.eureka.hub.domain.entity.hub.Hub;
 import com.lms.eureka.hub.domain.repository.HubRepository;
