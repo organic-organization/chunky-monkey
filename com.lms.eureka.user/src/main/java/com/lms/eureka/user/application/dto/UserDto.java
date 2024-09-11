@@ -45,19 +45,6 @@ public record UserDto(
                 .build();
     }
 
-    public static UserDto findPasswordOf(String username) {
-        return UserDto.builder()
-                .username(username)
-                .build();
-    }
-
-    public static UserDto updatePasswordOf(String username, String password) {
-        return UserDto.builder()
-                .username(username)
-                .password(password)
-                .build();
-    }
-
     public User toEntity(String encodePassword) {
         return User.create(username, encodePassword, role, slackId);
     }

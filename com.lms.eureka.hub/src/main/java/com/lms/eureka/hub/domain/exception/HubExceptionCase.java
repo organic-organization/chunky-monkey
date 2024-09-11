@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 public enum HubExceptionCase {
 
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 사용자가 존재하지 않습니다."),
     HUB_NOT_FOUND(HttpStatus.NOT_FOUND, "해당하는 허브가 존재하지 않습니다.");
 
     private final HttpStatus httpStatus;
