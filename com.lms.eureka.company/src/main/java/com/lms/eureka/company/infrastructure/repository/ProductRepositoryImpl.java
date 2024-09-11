@@ -1,11 +1,9 @@
 package com.lms.eureka.company.infrastructure.repository;
 
 import com.lms.eureka.company.application.dto.CompanyProductReadResponse;
-import com.lms.eureka.company.application.dto.CompanyReadResponse;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
