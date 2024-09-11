@@ -135,6 +135,6 @@ public class UserService {
             throw new UserException(UserExceptionCase.FIND_PASSWORD_FAIL);
         }
 
-        user.updatePassword(dto.password());
+        user.updatePassword(passwordEncoder.encode(dto.password()));
     }
 }
