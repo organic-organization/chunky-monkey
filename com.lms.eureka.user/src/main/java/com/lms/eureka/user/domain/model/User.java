@@ -56,6 +56,10 @@ public class User extends BaseEntity {
         }
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
     public void delete() {
         this.isDeleted = true;
     }
