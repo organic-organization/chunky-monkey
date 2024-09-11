@@ -44,9 +44,9 @@ public class CommonResponse<T> {
                 .build();
     }
 
-    public static <T> CommonResponse<T> failure(String message) {
+    public static <T> CommonResponse<T> failure(HttpStatus status, String message) {
         return CommonResponse.<T>builder()
-                .status(HttpStatus.BAD_REQUEST)
+                .status(status)
                 .message(message)
                 .build();
     }

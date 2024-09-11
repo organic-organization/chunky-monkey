@@ -24,8 +24,12 @@ public class CompanyController {
     @PostMapping("")
     public CommonResponse createCompany(@RequestBody CompanyCreateRequest companyCreateRequest) {
 
-        // requestBody에 있는 hubId 값을 가지는 hub가 db에 존재하지 않을 경우 예외를 throw
-        CommonResponse hubResponse = hubClient.findHubById(companyCreateRequest.hubId());
+        // requestBody에 있는 hubId 값을 가지는 hub가 db에 존재하지 않을 경우 실패 응답
+        CommonResponse hubResponse = hubClient.findHub(companyCreateRequest.hubId());
+        if (!hubResponse.getMessage().equals("허브 조회 완료.")) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "허브 조회 실패.");
+        }
 
         return CommonResponse
                 .success(companyService.createCompany(companyCreateRequest));
@@ -38,17 +42,17 @@ public class CompanyController {
         // 업체 목록 조회 시 한 번에 10, 30, 50개 단위로만 조회 가능
         if (!List.of(10, 30, 50).contains(pageable.getPageSize())) {
             return CommonResponse
-                    .failure("한 페이지 당 10, 30, 50개 단위로만 조회가 가능합니다.");
+                    .failure(HttpStatus.BAD_REQUEST, "한 페이지 당 10, 30, 50개 단위로만 조회가 가능합니다.");
         }
 
         return CommonResponse
-                .success(HttpStatus.OK, "업체 추가 완료", companyService.findCompanies(search, pageable));
+                .success(HttpStatus.OK, "업체 목록 조회 완료", companyService.findCompanies(search, pageable));
     }
 
     @GetMapping("/{companyId}")
     public CommonResponse getCompany(@PathVariable(name = "companyId") UUID companyId) {
         return CommonResponse
-                .success(HttpStatus.OK, "업체 조회 완료", companyService.findCompany(companyId));
+                .success(HttpStatus.OK, "단일 업체 조회 완료", companyService.findCompany(companyId));
     }
 
     @PutMapping("/{companyId}")
@@ -78,7 +82,7 @@ public class CompanyController {
         // 상품 목록 조회 시 한 번에 10, 30, 50개 단위로만 조회 가능
         if (!List.of(10, 30, 50).contains(pageable.getPageSize())) {
             return CommonResponse
-                    .failure("한 페이지 당 10, 30, 50개 단위로만 조회가 가능합니다.");
+                    .failure(HttpStatus.BAD_REQUEST, "한 페이지 당 10, 30, 50개 단위로만 조회가 가능합니다.");
         }
 
         return CommonResponse
