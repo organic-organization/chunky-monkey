@@ -1,6 +1,6 @@
 package com.lms.eureka.hub.infra.repository;
 
-import static com.lms.eureka.hub.domain.entity.QHub.hub;
+import static com.lms.eureka.hub.domain.entity.hub.QHub.hub;
 
 import com.lms.eureka.hub.domain.entity.hub.Hub;
 import com.lms.eureka.hub.presentation.request.SearchHubRequest;
@@ -27,7 +27,7 @@ public class HubQuerydslRepositoryImpl implements HubQuerydslRepository {
                         hubNameEq(requestParam.hubName()),
                         addressEq(requestParam.address())
                 )
-                .orderBy(hub.id.asc())
+                .orderBy(hub.routeIndex.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

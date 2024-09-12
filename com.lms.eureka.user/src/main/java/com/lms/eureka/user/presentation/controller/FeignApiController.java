@@ -18,14 +18,26 @@ public class FeignApiController {
     private final UserService userService;
 
     @GetMapping("/{username}")
-    public CommonResponse<Void> getUser(@PathVariable("username") String username) {
-       boolean result = userService.getUserInfoByUserName(username) != null;
+    public CommonResponse<Void> getUserByUsername(@PathVariable("username") String username) {
+        boolean result = userService.getUserInfoByUserName(username) != null;
 
-       if(!result) {
-           throw new UserException(UserExceptionCase.USER_NOT_FOUND);
-       }
-       else {
-           return CommonResponse.success(null);
-       }
+        if(!result) {
+            throw new UserException(UserExceptionCase.USER_NOT_FOUND);
+        }
+        else {
+            return CommonResponse.success(null);
+        }
+    }
+
+    @GetMapping("/userId/{userId}/")
+    public CommonResponse<Void> getUserByUserId(@PathVariable("userId") Long userId) {
+        boolean result = userService.getUserInfoByUserId(userId) != null;
+
+        if(!result) {
+            throw new UserException(UserExceptionCase.USER_NOT_FOUND);
+        }
+        else {
+            return CommonResponse.success(null);
+        }
     }
 }

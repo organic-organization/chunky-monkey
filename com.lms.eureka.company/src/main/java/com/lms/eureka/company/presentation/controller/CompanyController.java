@@ -20,6 +20,7 @@ public class CompanyController {
 
     private final CompanyService companyService;
     private final HubClient hubClient;
+    private final UserClient userClient;
 
     @PostMapping("")
     public CommonResponse createCompany(@RequestBody CompanyCreateRequest companyCreateRequest) {
@@ -36,7 +37,7 @@ public class CompanyController {
     }
 
     @GetMapping("")
-    public CommonResponse getCompanies(@PageableDefault(page = 0, size = 10, sort = {"name"}, direction = Sort.Direction.DESC) Pageable pageable,
+    public CommonResponse getCompanies(@PageableDefault(page = 0, size = 10, sort = {"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable,
                                           @RequestParam(name = "search", required = false) String search) {
 
         // 업체 목록 조회 시 한 번에 10, 30, 50개 단위로만 조회 가능
@@ -77,7 +78,7 @@ public class CompanyController {
 
     @GetMapping("/{companyId}/products")
     public CommonResponse getCompanyProducts(@PathVariable(name = "companyId") UUID companyId,
-                                                @PageableDefault(page = 0, size = 10, sort = {"name"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                                @PageableDefault(page = 0, size = 10, sort = {"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable,
                                                 @RequestParam(name = "search", required = false) String search) {
         // 상품 목록 조회 시 한 번에 10, 30, 50개 단위로만 조회 가능
         if (!List.of(10, 30, 50).contains(pageable.getPageSize())) {
@@ -97,11 +98,44 @@ public class CompanyController {
                 .success(HttpStatus.OK, "상품 수정 완료", companyService.modifyCompanyProduct(companyId, productId, companyProductUpdateRequest));
     }
 
-    @PutMapping("/{companyId}/products")
+    @DeleteMapping("/{companyId}/products")
     public CommonResponse deleteCompanyProducts(@PathVariable(name = "companyId") UUID companyId,
                                                 @RequestBody List<CompanyProductDeleteRequest> companyProductDeleteRequests) {
         return CommonResponse
                 .success(HttpStatus.OK, companyService.deleteCompanyProducts(companyId, companyProductDeleteRequests));
+    }
+
+    @PostMapping("/{companyId}/managers")
+    public CommonResponse createCompanyManager(@PathVariable(name = "companyId") UUID companyId,
+                                               @RequestBody CompanyManagerCreateRequest companyManagerCreateRequest) {
+        Long userId = companyManagerCreateRequest.userId();
+
+        // TODO: UserClient에서 userId로 조회
+         userClient.getUser(userId);
+
+        return CommonResponse
+                .success(HttpStatus.OK, companyService.createCompanyManager(companyId, companyManagerCreateRequest));
+    }
+
+    @GetMapping("/{companyId}/managers")
+    public CommonResponse getCompanyManagers(@PathVariable(name = "companyId") UUID companyId,
+                                             @PageableDefault(page = 0, size = 10, sort = {"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
+        return CommonResponse
+                .success(HttpStatus.OK, companyService.findCompanyManagers(companyId, pageable));
+    }
+
+    @GetMapping("/{companyId}/managers/{managerId}")
+    public CommonResponse getCompanyManager(@PathVariable(name = "companyId") UUID companyId,
+                                            @PathVariable(name = "managerId") UUID managerId) {
+        return CommonResponse
+                .success(HttpStatus.OK, companyService.findCompanyManager(companyId, managerId));
+    }
+
+    @DeleteMapping("/{companyId}/managers")
+    public CommonResponse deleteCompanyManager(@PathVariable(name = "companyId") UUID companyId,
+                                               @RequestBody List<CompanyManagerDeleteRequest> companyManagerDeleteRequests) {
+        return CommonResponse
+                .success(HttpStatus.OK, companyService.deleteCompanyManagers(companyId, companyManagerDeleteRequests));
     }
 
 }
