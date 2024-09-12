@@ -7,9 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 public interface QueryDslCompanyRepository {
 
     Page<CompanyReadResponse> findCompaniesBy(Pageable pageable);
 
     Page<CompanyReadResponse> findCompaniesByName(String search, Pageable pageable);
+
 }

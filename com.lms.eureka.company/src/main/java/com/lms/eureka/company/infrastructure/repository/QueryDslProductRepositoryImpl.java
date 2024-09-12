@@ -20,7 +20,7 @@ import java.util.UUID;
 import static com.lms.eureka.company.domain.model.QProduct.product;
 
 @RequiredArgsConstructor
-public class ProductRepositoryImpl implements QueryDslProductRepository {
+public class QueryDslProductRepositoryImpl implements QueryDslProductRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -87,7 +87,8 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(product.count())
-                .from(product);
+                .from(product)
+                .where(product.deletedAt.isNull());
         return new PageImpl<>(companyProductReadResponses, pageable, countQuery.fetchCount());
     }
 

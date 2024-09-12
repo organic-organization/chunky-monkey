@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,9 @@ import java.util.UUID;
 
 import static com.lms.eureka.company.domain.model.QCompanyManager.companyManager;
 
+@Repository
 @RequiredArgsConstructor
-public class ManagerRepositoryImpl implements QueryDslManagerRepository{
+public class QueryDslManagerRepositoryImpl implements QueryDslManagerRepository{
 
     private final JPAQueryFactory jpaQueryFactory;
     @Override
@@ -45,7 +47,8 @@ public class ManagerRepositoryImpl implements QueryDslManagerRepository{
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(companyManager.count())
-                .from(companyManager);
+                .from(companyManager)
+                .where(companyManager.deletedAt.isNull());
         return new PageImpl<>(companyManagerReadResponses, pageable, countQuery.fetchCount());
     }
 
