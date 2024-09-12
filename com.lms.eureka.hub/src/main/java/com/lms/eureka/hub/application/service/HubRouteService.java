@@ -2,39 +2,38 @@ package com.lms.eureka.hub.application.service;
 
 import com.lms.eureka.hub.application.dto.hubRoute.HubRouteDto;
 import com.lms.eureka.hub.application.dto.hubRoute.HubRouteMapper;
+import com.lms.eureka.hub.domain.entity.hub.Hub;
 import com.lms.eureka.hub.domain.entity.hubRoute.HubRoute;
-import com.lms.eureka.hub.domain.repository.HubRouteRepository;
+import com.lms.eureka.hub.domain.service.HubDomainService;
+import com.lms.eureka.hub.domain.service.HubRouteDomainService;
 import com.lms.eureka.hub.presentation.request.hubRoute.CreateHubRouteRequest;
+import com.lms.eureka.hub.presentation.request.hubRoute.SearchHubRouteRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class HubRouteService {
 
-    private final HubRouteRepository hubRouteRepository;
-    private final HubService hubService;
+    private final HubRouteDomainService hubRouteDomainService;
+    private final HubDomainService hubDomainService;
     private final UserService userService;
     private final HubRouteMapper hubRouteMapper;
 
-    @Transactional
     public HubRouteDto createHubRoute(CreateHubRouteRequest requestParam, String username) {
-        hubService.checkHubExists(requestParam.departureHubId());
-        hubService.checkHubExists(requestParam.arrivalHubId());
         userService.checkUserExists(username);
-        HubRoute hubRoute = saveHubRoute(requestParam, username);
+        Hub departureHub = hubDomainService.findHub(requestParam.departureHubName());
+        Hub arrivalHub = hubDomainService.findHub(requestParam.arrivalHubName());
+        HubRoute hubRoute = hubRouteDomainService.createHubRoute(departureHub, arrivalHub, username);
         return hubRouteMapper.toDto(hubRoute);
     }
 
-    private HubRoute saveHubRoute(CreateHubRouteRequest requestParam, String username) {
-        HubRoute hubRoute = HubRoute.create(
-                requestParam.departureHubId(),
-                requestParam.arrivalHubId(),
-                requestParam.duration(),
-                username);
-        hubRouteRepository.save(hubRoute);
-        return hubRoute;
+    public Page<HubRouteDto> searchHubRoute(SearchHubRouteRequest requestParam, Pageable pageable) {
+        Page<HubRoute> hubRoutePage = hubRouteDomainService.searchHubRoute(requestParam, pageable);
+        return hubRoutePage.map(hubRouteMapper::toDto);
     }
 
 }
+

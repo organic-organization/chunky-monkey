@@ -1,6 +1,7 @@
 package com.lms.eureka.hub.domain.entity.hubRoute;
 
 import com.lms.eureka.hub.domain.entity.BaseEntity;
+import com.lms.eureka.hub.domain.entity.hub.Hub;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import java.time.Duration;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,13 +32,21 @@ public class HubRoute extends BaseEntity {
     private UUID id;
 
     @NotNull
-    private UUID departureHubId;
+    private String displayName;
+
+    @ManyToOne
+    @JoinColumn(name = "departure_hub_id", nullable = false)
+    private Hub departureHub;
+
+    @ManyToOne
+    @JoinColumn(name = "arrival_hub_id", nullable = false)
+    private Hub arrivalHub;
 
     @NotNull
-    private UUID arrivalHubId;
+    private Duration transitTime;
 
     @NotNull
-    private long duration;
+    private long distance;
 
     @NotNull
     private Boolean isDelete;
@@ -45,11 +55,13 @@ public class HubRoute extends BaseEntity {
     @JoinColumn(name = "parent_id")
     private HubRoute parent;
 
-    public static HubRoute create(UUID departureHubId, UUID arrivalHubId, long duration, String username) {
+    public static HubRoute create(Hub departureHub, Hub arrivalHub, String displayName, long distance, Duration transitTime, String username) {
         HubRoute hubRoute = HubRoute.builder()
-                .departureHubId(departureHubId)
-                .arrivalHubId(arrivalHubId)
-                .duration(duration)
+                .departureHub(departureHub)
+                .arrivalHub(arrivalHub)
+                .displayName(displayName)
+                .distance(distance)
+                .transitTime(transitTime)
                 .isDelete(false)
                 .build();
         hubRoute.setCreatedBy(username);

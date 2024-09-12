@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 public interface HubRepository {
     Hub save(Hub hub);
     Optional<Hub> findByIdAndIsDeleteFalse(UUID hubId);
+    Optional<Hub> findByNameAndIsDeleteFalse(String hubName);
     Page<Hub> searchHub(SearchHubRequest requestParam, Pageable pageable);
     Optional<Hub> findByName(String name);
     Optional<Hub> findByAddress(String address);

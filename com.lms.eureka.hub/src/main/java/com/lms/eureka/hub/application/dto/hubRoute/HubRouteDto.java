@@ -1,12 +1,15 @@
 package com.lms.eureka.hub.application.dto.hubRoute;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record HubRouteDto(UUID id,
                           UUID departureHubId,
                           UUID arrivalHubId,
-                          long duration,
+                          String displayName,
+                          long distance,
+                          Duration transitTime,
                           Boolean isDelete,
                           LocalDateTime createdAt,
                           String createdBy,
