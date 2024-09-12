@@ -1,7 +1,10 @@
 package com.lms.eureka.user.presentation.controller;
 
+import com.lms.eureka.user.application.dto.UserDto;
 import com.lms.eureka.user.application.service.UserService;
 import com.lms.eureka.user.infra.jwt.UserDetailsImpl;
+import com.lms.eureka.user.presentation.request.FindPasswordRequestDto;
+import com.lms.eureka.user.presentation.request.UpdatePasswordRequestDto;
 import com.lms.eureka.user.presentation.request.UserUpdateRequestDto;
 import com.lms.eureka.user.presentation.response.CommonResponse;
 import com.lms.eureka.user.presentation.response.UserResponseDto;
@@ -29,7 +32,7 @@ public class AuthUserController {
     }
 
     @GetMapping("/master/user")
-    public CommonResponse<Page<UserResponseDto>> getUserInfo(
+    public CommonResponse<Page<UserResponseDto>> getUserInfos(
             @ParameterObject @PageableDefault(
                     size = 10, sort = {"username"}, direction = Sort.Direction.DESC
             ) Pageable pageable
@@ -51,5 +54,20 @@ public class AuthUserController {
     public CommonResponse<Void> deleteUserInfo(@PathVariable("userId") Long userId){
         userService.deleteUserInfo(userId);
         return CommonResponse.success("User deleted");
+    }
+
+    @PostMapping("/find/password")
+    public CommonResponse<Void> findPassword(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.findPassword(UserDto.from(userDetails.getUser()));
+        return CommonResponse.success("코드 보내기 성공");
+    }
+
+    @PostMapping("/update/password")
+    public CommonResponse<Void> updatePassword(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @RequestBody UpdatePasswordRequestDto dto
+    ) {
+        userService.updatePassword(UserDto.from(userDetails.getUser()), dto);
+        return CommonResponse.success("비밀번호 변경 성공");
     }
 }
