@@ -24,8 +24,10 @@ public class CompanyManager extends BaseEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    public CompanyManager(Company company, Long userId) {
+    public CompanyManager(Company company, Long userId, String username) {
         this.company = company;
         this.userId = userId;
+        this.setCreatedBy(username);
+        this.setUpdatedBy(username);
     }
 }

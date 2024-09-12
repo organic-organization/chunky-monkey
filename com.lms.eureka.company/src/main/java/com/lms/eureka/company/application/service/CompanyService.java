@@ -29,12 +29,12 @@ public class CompanyService {
     private final ManagerRepository managerRepository;
 
     @Transactional
-    public String createCompany(CompanyCreateRequest companyCreateRequest) {
+    public String createCompany(CompanyCreateRequest companyCreateRequest, String username) {
 
         if (companyRepository.findByName(companyCreateRequest.name()).isPresent()) {
             throw new RuntimeException("중복된 업체의 이름입니다.");
         }
-        companyRepository.save(new Company(companyCreateRequest));
+        companyRepository.save(new Company(companyCreateRequest, username));
         return "업체 추가 완료.";
     }
 
@@ -64,20 +64,21 @@ public class CompanyService {
     }
 
     @Transactional
-    public String deleteCompany(CompanyDeleteRequest companyDeleteRequest) {
+    public String deleteCompany(CompanyDeleteRequest companyDeleteRequest, String username) {
         Company company = companyRepository.findById(companyDeleteRequest.id())
                 .orElseThrow(() -> new RuntimeException(companyDeleteRequest.id() + "는 유효한 업체 id가 아닙니다."));
-        company.delete("name");
+
+        company.delete(username);
         return companyDeleteRequest.id() + " 업체 삭제 완료.";
     }
 
     @Transactional
-    public String createCompanyProduct(UUID companyId, List<CompanyProductCreateRequest> companyProductCreateRequests) {
+    public String createCompanyProduct(UUID companyId, List<CompanyProductCreateRequest> companyProductCreateRequests, String username) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
         companyProductCreateRequests
                 .forEach(companyProductCreateRequest -> {
-                    productRepository.save(new Product(companyProductCreateRequest, company));
+                    productRepository.save(new Product(companyProductCreateRequest, company, username));
                 });
         return "상품 추가 완료.";
     }
@@ -93,19 +94,19 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyProductReadResponse modifyCompanyProduct(UUID companyId, UUID productId, CompanyProductUpdateRequest companyProductUpdateRequest) {
+    public CompanyProductReadResponse modifyCompanyProduct(UUID companyId, UUID productId, CompanyProductUpdateRequest companyProductUpdateRequest, String username) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException(productId + "는 유효한 상품 id가 아닙니다."));
 
-        product.update(companyProductUpdateRequest);
+        product.update(companyProductUpdateRequest, username);
         return new CompanyProductReadResponse(product.getId(), product.getName(), product.getPrice(), product.getStock(), product.getCreatedAt(), product.getUpdatedAt());
     }
 
     @Transactional
-    public String deleteCompanyProducts(UUID companyId, List<CompanyProductDeleteRequest> companyProductDeleteRequests) {
+    public String deleteCompanyProducts(UUID companyId, List<CompanyProductDeleteRequest> companyProductDeleteRequests, String username) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
 
@@ -113,16 +114,16 @@ public class CompanyService {
                 .forEach(companyProductDeleteRequest -> {
                     Product product = productRepository.findById(companyProductDeleteRequest.productId())
                             .orElseThrow(() -> new RuntimeException(companyProductDeleteRequest.productId() + "는 유효한 상품 id가 아닙니다."));
-                    product.delete("name");
+                    product.delete(username);
                 });
         return "상품 삭제 완료.";
     }
 
     @Transactional
-    public String createCompanyManager(UUID companyId, CompanyManagerCreateRequest companyManagerCreateRequest) {
+    public String createCompanyManager(UUID companyId, CompanyManagerCreateRequest companyManagerCreateRequest, String username) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
-        CompanyManager companyManager = new CompanyManager(company, companyManagerCreateRequest.userId());
+        CompanyManager companyManager = new CompanyManager(company, companyManagerCreateRequest.userId(), username);
         managerRepository.save(companyManager);
         return "업체 관리자 추가 완료.";
     }
@@ -144,7 +145,7 @@ public class CompanyService {
     }
 
     @Transactional
-    public String deleteCompanyManagers(UUID companyId, List<CompanyManagerDeleteRequest> companyManagerDeleteRequests) {
+    public String deleteCompanyManagers(UUID companyId, List<CompanyManagerDeleteRequest> companyManagerDeleteRequests, String username) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
         companyManagerDeleteRequests
@@ -152,7 +153,7 @@ public class CompanyService {
                     UUID managerId = companyManagerDeleteRequest.id();
                     CompanyManager companyManager = managerRepository.findById(managerId)
                             .orElseThrow(() -> new RuntimeException(managerId + "는 유효한 업체 담당자 id가 아닙니다."));
-                    companyManager.delete("name");
+                    companyManager.delete(username);
                 });
         return "업체 담당자 삭제 완료.";
     }

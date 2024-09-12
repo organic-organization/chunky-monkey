@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 
 @Builder
 @Getter
-//@NoArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponse<T> {
