@@ -38,11 +38,13 @@ public class Company extends BaseEntity{
     @Column
     private UUID hubId;
 
-    public Company(CompanyCreateRequest companyCreateRequest) {
+    public Company(CompanyCreateRequest companyCreateRequest, String username) {
         this.name = companyCreateRequest.name();
         this.address = companyCreateRequest.address();
         this.type = CompanyType.valueOf(companyCreateRequest.companyType());
         this.hubId = companyCreateRequest.hubId();
+        this.setCreatedBy(username);
+        this.setUpdatedBy(username);
     }
 
     public void update(CompanyUpdateRequest companyUpdateRequest, String username) {

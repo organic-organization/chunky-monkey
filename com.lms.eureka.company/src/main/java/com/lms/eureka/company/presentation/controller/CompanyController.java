@@ -36,8 +36,9 @@ public class CompanyController {
                     .failure(HttpStatus.NOT_FOUND, "허브 조회 실패: hub_id 값이 존재하지 않음.");
         }
 
+        String username = request.getHeader("username");
         return CommonResponse
-                .success(companyService.createCompany(companyCreateRequest));
+                .success(companyService.createCompany(companyCreateRequest, username));
     }
 
     @GetMapping("")
@@ -70,16 +71,20 @@ public class CompanyController {
     }
 
     @DeleteMapping("")
-    public CommonResponse deleteCompany(@RequestBody CompanyDeleteRequest companyDeleteRequest) {
+    public CommonResponse deleteCompany(@RequestBody CompanyDeleteRequest companyDeleteRequest,
+                                        HttpServletRequest request) {
+        String username = request.getHeader("username");
         return CommonResponse
-                .success("업체 삭제 완료.", companyService.deleteCompany(companyDeleteRequest));
+                .success("업체 삭제 완료.", companyService.deleteCompany(companyDeleteRequest, username));
     }
 
     @PostMapping("/{companyId}/products")
     public CommonResponse createCompanyProducts(@PathVariable(name = "companyId") UUID companyId,
-                                                        @RequestBody List<CompanyProductCreateRequest> companyProductCreateRequests) {
+                                                @RequestBody List<CompanyProductCreateRequest> companyProductCreateRequests,
+                                                HttpServletRequest request) {
+        String username = request.getHeader("username");
         return CommonResponse
-                .success("상품 추가 완료.", companyService.createCompanyProduct(companyId, companyProductCreateRequests));
+                .success("상품 추가 완료.", companyService.createCompanyProduct(companyId, companyProductCreateRequests, username));
     }
 
     @GetMapping("/{companyId}/products")
@@ -99,35 +104,39 @@ public class CompanyController {
     @PutMapping("/{companyId}/products/{productId}")
     public CommonResponse modifyCompanyProduct(@PathVariable(name = "companyId") UUID companyId,
                                                 @PathVariable(name = "productId") UUID productId,
-                                                @RequestBody CompanyProductUpdateRequest companyProductUpdateRequest) {
+                                                @RequestBody CompanyProductUpdateRequest companyProductUpdateRequest,
+                                               HttpServletRequest request) {
+        String username = request.getHeader("username");
         return CommonResponse
-                .success("상품 수정 완료", companyService.modifyCompanyProduct(companyId, productId, companyProductUpdateRequest));
+                .success("상품 수정 완료", companyService.modifyCompanyProduct(companyId, productId, companyProductUpdateRequest, username));
     }
 
     @DeleteMapping("/{companyId}/products")
     public CommonResponse deleteCompanyProducts(@PathVariable(name = "companyId") UUID companyId,
-                                                @RequestBody List<CompanyProductDeleteRequest> companyProductDeleteRequests) {
+                                                @RequestBody List<CompanyProductDeleteRequest> companyProductDeleteRequests,
+                                                HttpServletRequest request) {
+        String username = request.getHeader("username");
         return CommonResponse
-                .success(companyService.deleteCompanyProducts(companyId, companyProductDeleteRequests));
+                .success(companyService.deleteCompanyProducts(companyId, companyProductDeleteRequests, username));
     }
 
     @PostMapping("/{companyId}/managers")
     public CommonResponse createCompanyManager(@PathVariable(name = "companyId") UUID companyId,
-                                               @RequestBody CompanyManagerCreateRequest companyManagerCreateRequest) {
+                                               @RequestBody CompanyManagerCreateRequest companyManagerCreateRequest,
+                                               HttpServletRequest request) {
         Long userId = companyManagerCreateRequest.userId();
+        userClient.getUserByUserId(userId);
 
-        // TODO: UserClient에서 userId로 조회
-         userClient.getUserByUserId(userId);
-
+        String username = request.getHeader("username");
         return CommonResponse
-                .success(companyService.createCompanyManager(companyId, companyManagerCreateRequest));
+                .success(companyService.createCompanyManager(companyId, companyManagerCreateRequest, username));
     }
 
     @GetMapping("/{companyId}/managers")
     public CommonResponse getCompanyManagers(@PathVariable(name = "companyId") UUID companyId,
                                              @PageableDefault(page = 0, size = 10, sort = {"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable) {
         return CommonResponse
-                .success("업체 담당자 조회 완료.", companyService.findCompanyManagers(companyId, pageable));
+                .success("업체 담당자 목록 조회 완료.", companyService.findCompanyManagers(companyId, pageable));
     }
 
     @GetMapping("/{companyId}/managers/{managerId}")
@@ -139,9 +148,11 @@ public class CompanyController {
 
     @DeleteMapping("/{companyId}/managers")
     public CommonResponse deleteCompanyManager(@PathVariable(name = "companyId") UUID companyId,
-                                               @RequestBody List<CompanyManagerDeleteRequest> companyManagerDeleteRequests) {
+                                               @RequestBody List<CompanyManagerDeleteRequest> companyManagerDeleteRequests,
+                                               HttpServletRequest request) {
+        String username = request.getHeader("username");
         return CommonResponse
-                .success("업체 담당자 삭제 완료", companyService.deleteCompanyManagers(companyId, companyManagerDeleteRequests));
+                .success("업체 담당자 삭제 완료", companyService.deleteCompanyManagers(companyId, companyManagerDeleteRequests, username));
     }
 
 }
