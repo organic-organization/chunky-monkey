@@ -96,8 +96,8 @@ public class CompanyController {
 
     @GetMapping("/{companyId}/products")
     public CommonResponse getCompanyProducts(@PathVariable(name = "companyId") UUID companyId,
-                                                @PageableDefault(page = 0, size = 10, sort = {"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable,
-                                                @RequestParam(name = "search", required = false) String search) {
+                                             @PageableDefault(page = 0, size = 10, sort = {"updatedAt"}, direction = Sort.Direction.DESC) Pageable pageable,
+                                             @RequestParam(name = "search", required = false) String search) {
         // 상품 목록 조회 시 한 번에 10, 30, 50개 단위로만 조회 가능
         if (!List.of(10, 30, 50).contains(pageable.getPageSize())) {
             return CommonResponse

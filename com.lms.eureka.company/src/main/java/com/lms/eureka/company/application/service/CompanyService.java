@@ -42,8 +42,10 @@ public class CompanyService {
     public Page<CompanyReadResponse> findCompanies(String search, Pageable pageable) {
         if (search == null || search.trim().isEmpty()) {
             return companyRepository.findCompaniesBy(pageable);
+//            return companyRepository.findCompanyListBy();
         }
         return companyRepository.findCompaniesByName(search, pageable);
+//        return companyRepository.findCompanyListBy();
     }
 
     @Transactional(readOnly = true)
