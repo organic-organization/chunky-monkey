@@ -5,12 +5,12 @@ import com.lms.eureka.user.application.dto.UserDto;
 import com.lms.eureka.user.domain.exception.UserException;
 import com.lms.eureka.user.domain.exception.UserExceptionCase;
 import com.lms.eureka.user.domain.service.RedisService;
-import com.lms.eureka.user.presentation.request.FindPasswordRequestDto;
 import com.lms.eureka.user.presentation.request.LoginRequestDto;
 import com.lms.eureka.user.domain.model.User;
 import com.lms.eureka.user.infra.jwt.JwtUtil;
 import com.lms.eureka.user.domain.repository.UserRepository;
 import com.lms.eureka.user.presentation.request.SlackSendRequestDto;
+import com.lms.eureka.user.presentation.request.UpdatePasswordRequestDto;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -97,8 +97,8 @@ public class UserService {
         user.delete();
     }
 
-    public void findPassword(FindPasswordRequestDto dto) {
-        User user = userRepository.findByUsername(dto.username())
+    public void findPassword(UserDto userDto) {
+        User user = userRepository.findByUsername(userDto.username())
                 .orElseThrow(() -> new UserException(UserExceptionCase.USER_NOT_FOUND));
 
         // 6자리 난수 생성
@@ -121,18 +121,22 @@ public class UserService {
         }
     }
 
-    public void updatePassword(String requestCode, UserDto dto) {
-        User user = userRepository.findByUsername(dto.username())
+    public void updatePassword(UserDto userDto, UpdatePasswordRequestDto requestDto) {
+        User user = userRepository.findByUsername(userDto.username())
                 .orElseThrow(() -> new UserException(UserExceptionCase.USER_NOT_FOUND));
 
         String code = Optional.ofNullable(
-                redisService.getValueAsClass(USER_REDIS_KEY_PREFIX + dto.username(), String.class)
+                redisService.getValueAsClass(USER_REDIS_KEY_PREFIX + user.getUsername(), String.class)
         ).orElseThrow(() -> new UserException(UserExceptionCase.FIND_PASSWORD_FAIL));
 
-        if (!code.equals(requestCode)) {
+        if (!code.equals(requestDto.code())) {
             throw new UserException(UserExceptionCase.FIND_PASSWORD_FAIL);
         }
 
-        user.updatePassword(passwordEncoder.encode(dto.password()));
+        if(!passwordEncoder.matches(requestDto.existingPassword(), user.getPassword())){
+            throw new UserException(UserExceptionCase.USER_NOT_FOUND);
+        }
+
+        user.updatePassword(passwordEncoder.encode(requestDto.newPassword()));
     }
 }
