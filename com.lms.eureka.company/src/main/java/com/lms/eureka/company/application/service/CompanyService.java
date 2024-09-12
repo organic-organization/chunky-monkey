@@ -55,10 +55,10 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyUpdateResponse modifyCompany(UUID companyId, CompanyUpdateRequest companyUpdateRequest) {
+    public CompanyUpdateResponse modifyCompany(UUID companyId, CompanyUpdateRequest companyUpdateRequest, String username) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException(companyId + "는 유효한 업체 id가 아닙니다."));
-        company.update(companyUpdateRequest);
+        company.update(companyUpdateRequest, username);
 
         return new CompanyUpdateResponse(company.getId(), company.getName(), company.getCreatedAt(), company.getUpdatedAt());
     }

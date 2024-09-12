@@ -45,7 +45,7 @@ public class Company extends BaseEntity{
         this.hubId = companyCreateRequest.hubId();
     }
 
-    public void update(CompanyUpdateRequest companyUpdateRequest) {
+    public void update(CompanyUpdateRequest companyUpdateRequest, String username) {
         if (companyUpdateRequest.name() != null) {
             this.name = companyUpdateRequest.name();
         }
@@ -55,6 +55,7 @@ public class Company extends BaseEntity{
         if (companyUpdateRequest.companyType() != null) {
             this.type = CompanyType.valueOf(companyUpdateRequest.companyType());
         }
+        this.setUpdatedBy(username);
     }
 
 }

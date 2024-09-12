@@ -11,5 +11,9 @@ import java.util.UUID;
 public interface UserClient {
 
     @GetMapping("/api/user/userId/{userId}")
-    CommonResponse<Void> getUser(@PathVariable("userId") Long userId);
+    CommonResponse<Void> getUserByUserId(@PathVariable("userId") Long userId);
+
+    @GetMapping("/api/user/{username}")
+    CommonResponse getUserByUsername(@PathVariable("username") String username);
+
 }

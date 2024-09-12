@@ -2,12 +2,14 @@ package com.lms.eureka.user.presentation.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.lms.eureka.user.domain.exception.UserExceptionCase;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Builder
 @Getter
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponse<T> {
 
