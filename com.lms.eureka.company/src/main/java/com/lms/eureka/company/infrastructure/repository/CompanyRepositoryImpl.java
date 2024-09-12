@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.lms.eureka.company.domain.model.QCompany.company;
-import static com.querydsl.core.types.dsl.Expressions.stringTemplate;
 
 @RequiredArgsConstructor
 public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
@@ -64,15 +63,7 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
                         company.createdAt
                 )
                 .from(company)
-                .where(company.name.like("%" + search + "%")
-//                .where(stringTemplate("ILIKE({0}, {1})", company.name, "%" + search + "%"))
-//                                        .and(company.deletedBy.isNull())
-                                .and(company.deletedAt.isNull())
-//                        .and(
-//                        Expressions.stringTemplate("function('lower', {0})", company.name)
-//                        .contains(search.toLowerCase())
-//                        )
-                )
+                .where(Expressions.stringTemplate("REPLACE(LOWER({0}), ' ', '')", company.name).eq(search.toLowerCase()))
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());

@@ -1,33 +1,22 @@
 package com.lms.eureka.company.presentation.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Builder
 @Getter
+//@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponse<T> {
 
     private HttpStatus status;
     private String message;
     private T data;
-
-    public static <T> CommonResponse<T> success(HttpStatus status, String message, T data) {
-        return CommonResponse.<T>builder()
-                .status(status)
-                .message(message)
-                .data(data)
-                .build();
-    }
-
-    public static <T> CommonResponse<T> success(HttpStatus status, T data) {
-        return CommonResponse.<T>builder()
-                .status(status)
-                .data(data)
-                .build();
-    }
 
     public static <T> CommonResponse<T> success(String message, T data) {
         return CommonResponse.<T>builder()
