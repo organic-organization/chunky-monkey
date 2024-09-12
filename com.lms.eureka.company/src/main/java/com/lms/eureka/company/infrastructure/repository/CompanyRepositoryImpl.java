@@ -4,6 +4,7 @@ import com.lms.eureka.company.application.dto.CompanyReadResponse;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -78,6 +80,9 @@ public class CompanyRepositoryImpl implements QueryDslCompanyRepository {
                 .select(company.count())
                 .from(company);
         return new PageImpl<>(companyReadResponses, pageable, countQuery.fetchCount());
+    }
+    private BooleanExpression searchByName(final String search) {
+        return StringUtils.hasText(search)? company.name.contains(search): null;
     }
 
     private CompanyReadResponse tupleToResponse(Tuple result) {

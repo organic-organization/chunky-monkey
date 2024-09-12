@@ -34,8 +34,8 @@ public class CompanyService {
         if (companyRepository.findByName(companyCreateRequest.name()).isPresent()) {
             throw new RuntimeException("중복된 업체의 이름입니다.");
         }
-        companyRepository.save(new Company(companyCreateRequest, username));
-        return "업체 추가 완료.";
+        Company company = companyRepository.save(new Company(companyCreateRequest, username));
+        return "업체 추가 완료. company_id: " + company.getId();
     }
 
     @Transactional(readOnly = true)

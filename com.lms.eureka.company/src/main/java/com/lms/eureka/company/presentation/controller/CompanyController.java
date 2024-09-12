@@ -30,13 +30,20 @@ public class CompanyController {
     public CommonResponse createCompany(@RequestBody CompanyCreateRequest companyCreateRequest,
                                         HttpServletRequest request) {
 
+        // [1] hubId 검증
         CommonResponse hubResponse = hubClient.findHub(companyCreateRequest.hubId());
         if (!hubResponse.getStatus().equals(HttpStatus.OK)) {
             return CommonResponse
                     .failure(HttpStatus.NOT_FOUND, "허브 조회 실패: hub_id 값이 존재하지 않음.");
         }
 
+        // [2] username 검증
         String username = request.getHeader("username");
+        CommonResponse userResponse = userClient.getUserByUsername(username);
+        if(!userResponse.getStatus().equals(HttpStatus.OK)) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "사용자 조회 실패: username 값이 존재하지 않음.");
+        }
         return CommonResponse
                 .success(companyService.createCompany(companyCreateRequest, username));
     }

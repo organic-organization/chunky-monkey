@@ -37,7 +37,7 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
                         product.createdAt
                 )
                 .from(product)
-                .where(product.deletedBy.isNull())
+                .where(product.deletedAt.isNull())
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
