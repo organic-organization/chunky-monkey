@@ -1,8 +1,10 @@
 package com.lms.eureka.user.presentation.controller;
 
 import com.lms.eureka.user.application.service.UserService;
+import com.lms.eureka.user.presentation.request.FindPasswordRequestDto;
 import com.lms.eureka.user.presentation.request.LoginRequestDto;
 import com.lms.eureka.user.presentation.request.SignUpRequestDto;
+import com.lms.eureka.user.presentation.request.UpdatePasswordRequestDto;
 import com.lms.eureka.user.presentation.response.CommonResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

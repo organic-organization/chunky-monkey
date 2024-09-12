@@ -1,9 +1,10 @@
 package com.lms.eureka.gateway.infra.jwt;
 
+import com.lms.eureka.gateway.domain.exception.GatewayException;
+import com.lms.eureka.gateway.domain.exception.GatewayExceptionCase;
 import com.lms.eureka.gateway.domain.model.UserRoleEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -30,7 +31,7 @@ public class JwtAuthorizationFilter{
 
             // token 없는 경우
             if (token == null) {
-                return response(exchange, HttpStatus.FORBIDDEN);
+                throw new GatewayException(GatewayExceptionCase.TOKEN_MISSING);
             }
 
             // 인증 필요 API
@@ -39,13 +40,12 @@ public class JwtAuthorizationFilter{
 
                 // 잘못된 jwt
                 if (role == null) {
-                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                    return exchange.getResponse().setComplete();
+                    throw new GatewayException(GatewayExceptionCase.TOKEN_MISSING);
                 }
 
                 // 권한 없음
                 if (!isAuthorized(roleInPath, role)) {
-                    return response(exchange, HttpStatus.UNAUTHORIZED);
+                    throw new GatewayException(GatewayExceptionCase.TOKEN_UNAUTHORIZED);
                 }
 
                 // 헤더에 username 추가
@@ -55,7 +55,7 @@ public class JwtAuthorizationFilter{
 
                 return Mono.empty();
             } else {
-                return response(exchange, HttpStatus.UNAUTHORIZED);
+                throw new GatewayException(GatewayExceptionCase.TOKEN_UNSUPPORTED);
             }
         }
     }
@@ -85,10 +85,5 @@ public class JwtAuthorizationFilter{
                 return false;
             }
         }
-    }
-
-    private Mono<Void> response(ServerWebExchange exchange, HttpStatus status) {
-        exchange.getResponse().setStatusCode(status);
-        return exchange.getResponse().setComplete();
     }
 }

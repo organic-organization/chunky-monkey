@@ -1,11 +1,10 @@
 package com.lms.eureka.company.infrastructure.repository;
 
 import com.lms.eureka.company.application.dto.CompanyProductReadResponse;
-import com.lms.eureka.company.application.dto.CompanyReadResponse;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,7 +20,7 @@ import java.util.UUID;
 import static com.lms.eureka.company.domain.model.QProduct.product;
 
 @RequiredArgsConstructor
-public class ProductRepositoryImpl implements QueryDslProductRepository {
+public class QueryDslProductRepositoryImpl implements QueryDslProductRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -33,10 +33,11 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
                         product.id,
                         product.name,
                         product.price,
-                        product.stock
+                        product.stock,
+                        product.createdAt
                 )
                 .from(product)
-                .where(product.deletedBy.isNotNull())
+                .where(product.deletedAt.isNull())
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
@@ -62,11 +63,18 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
                         product.id,
                         product.name,
                         product.price,
-                        product.stock
+                        product.stock,
+                        product.createdAt,
+                        product.updatedAt
                 )
                 .from(product)
-                .where(product.deletedBy.isNotNull())
-                .where(product.name.contains(search))
+                .where(
+                        product.deletedAt.isNull()
+                        .and(
+                        Expressions.stringTemplate("function('lower', {0})", product.name)
+                        .contains(search.toLowerCase())
+                        )
+                )
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
@@ -79,7 +87,8 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
 
         JPAQuery<Long> countQuery = jpaQueryFactory
                 .select(product.count())
-                .from(product);
+                .from(product)
+                .where(product.deletedAt.isNull());
         return new PageImpl<>(companyProductReadResponses, pageable, countQuery.fetchCount());
     }
 
@@ -88,13 +97,14 @@ public class ProductRepositoryImpl implements QueryDslProductRepository {
         String name = result.get(1, String.class);
         Integer price  = result.get(2, Integer.class);
         Integer stock = result.get(3, Integer.class);
-
-        return new CompanyProductReadResponse(id, name, price, stock);
+        LocalDateTime createdAt = result.get(4, LocalDateTime.class);
+        LocalDateTime updatedAt = result.get(5, LocalDateTime.class);
+        return new CompanyProductReadResponse(id, name, price, stock, createdAt, updatedAt);
     }
 
     private List<OrderSpecifier<?>> getAllOrderSpecifiers() {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
-        orders.add(new OrderSpecifier<>(Order.ASC, product.name));
+        orders.add(new OrderSpecifier<>(Order.DESC, product.updatedAt));
         return orders;
     }
 }

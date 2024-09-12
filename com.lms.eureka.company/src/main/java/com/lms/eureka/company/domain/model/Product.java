@@ -37,15 +37,17 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "company_id")
     private Company company;
 
-    public Product(CompanyProductCreateRequest companyProductCreateRequest, Company company) {
+    public Product(CompanyProductCreateRequest companyProductCreateRequest, Company company, String username) {
         this.name = companyProductCreateRequest.name();
         this.price = companyProductCreateRequest.price();
         this.stock = companyProductCreateRequest.stock();
         this.company = company;
+        this.setCreatedBy(username);
+        this.setUpdatedBy(username);
         company.getProducts().add(this);
     }
 
-    public void update(CompanyProductUpdateRequest companyProductUpdateRequest) {
+    public void update(CompanyProductUpdateRequest companyProductUpdateRequest, String username) {
         if (companyProductUpdateRequest.name() != null) {
             this.name = companyProductUpdateRequest.name();
         }
@@ -55,5 +57,6 @@ public class Product extends BaseEntity{
         if (companyProductUpdateRequest.stock() != null) {
             this.stock = companyProductUpdateRequest.stock();
         }
+        this.setUpdatedBy(username);
     }
 }

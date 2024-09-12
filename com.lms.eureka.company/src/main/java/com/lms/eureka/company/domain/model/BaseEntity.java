@@ -42,4 +42,9 @@ public class BaseEntity {
 
     @Column(name = "deleted_by", nullable = true, updatable = true)
     private String deletedBy;
+
+    public void delete(String username) {
+        this.deletedAt = LocalDateTime.now();
+        this.deletedBy = username;
+    }
 }

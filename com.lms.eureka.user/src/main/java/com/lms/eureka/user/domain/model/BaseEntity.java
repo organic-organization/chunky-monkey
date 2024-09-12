@@ -38,8 +38,8 @@ public class BaseEntity {
     @Column(name="deleted_by")
     private String deletedBy;
 
-    public void setDeleted(LocalDateTime deletedAt, String deletedBy) {
-        this.deletedAt = deletedAt;
+    public void setDeleted(String deletedBy) {
+        this.deletedAt = LocalDateTime.now();
         this.deletedBy = deletedBy;
     }
 }

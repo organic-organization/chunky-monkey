@@ -15,6 +15,10 @@ spring:
           predicates:
             - Path=/api/{role}/hubs/**
             - Path=/api/{role}/hub-routes/**
+        - id: company-service
+          uri: lb://company-service
+          predicates:
+            - Path=/api/{role}/companies/**
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
