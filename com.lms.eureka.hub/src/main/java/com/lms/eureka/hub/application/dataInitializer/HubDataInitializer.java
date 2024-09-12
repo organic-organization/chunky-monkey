@@ -43,8 +43,8 @@ public class HubDataInitializer implements CommandLineRunner {
         };
 
         for (String[] data : hubData) {
-            CreateHubRequest request = new CreateHubRequest(data[0], data[1], Double.parseDouble(data[2]), Double.parseDouble(data[3]),
-                    Integer.parseInt(data[4]));
+            CreateHubRequest request = new CreateHubRequest(data[0], data[1], Double.parseDouble(data[2]),
+                    Double.parseDouble(data[3]), Integer.parseInt(data[4]));
             hubDomainService.createHub(request, "system");
         }
     }

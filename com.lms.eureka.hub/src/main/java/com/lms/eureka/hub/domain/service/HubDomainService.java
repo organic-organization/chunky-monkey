@@ -60,6 +60,11 @@ public class HubDomainService {
         return findHubByName(hubName);
     }
 
+    @Transactional(readOnly = true)
+    public Hub findHub(long routeIndex) {
+        return findByRouteIndex(routeIndex);
+    }
+
     private Hub findHubById(UUID hubId) {
         return hubRepository.findByIdAndIsDeleteFalse(hubId)
                 .orElseThrow(() -> new HubException(HubExceptionCase.HUB_NOT_FOUND));
@@ -67,6 +72,11 @@ public class HubDomainService {
 
     private Hub findHubByName(String hubName) {
         return hubRepository.findByNameAndIsDeleteFalse(hubName)
+                .orElseThrow(() -> new HubException(HubExceptionCase.HUB_NOT_FOUND));
+    }
+
+    private Hub findByRouteIndex(long midIndex) {
+        return hubRepository.findByRouteIndex(midIndex)
                 .orElseThrow(() -> new HubException(HubExceptionCase.HUB_NOT_FOUND));
     }
 
