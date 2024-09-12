@@ -10,9 +10,10 @@ import java.util.UUID;
 @FeignClient(name = "user-service")
 public interface UserClient {
 
+    @GetMapping("/api/user/userId/{userId}")
+    CommonResponse<Void> getUserByUserId(@PathVariable("userId") Long userId);
+
     @GetMapping("/api/user/{username}")
     CommonResponse getUserByUsername(@PathVariable("username") String username);
 
-    @GetMapping("/api/user/{userId}")
-    CommonResponse getUserByUserId(@PathVariable("userId") Long userId);
 }
