@@ -1,11 +1,11 @@
 package com.lms.eureka.hub.domain.service;
 
+import com.lms.eureka.hub.domain.entity.hub.Hub;
 import com.lms.eureka.hub.domain.exception.HubException;
 import com.lms.eureka.hub.domain.exception.HubExceptionCase;
-import com.lms.eureka.hub.domain.entity.hub.Hub;
 import com.lms.eureka.hub.domain.repository.HubRepository;
-import com.lms.eureka.hub.presentation.request.CreateHubRequest;
-import com.lms.eureka.hub.presentation.request.SearchHubRequest;
+import com.lms.eureka.hub.presentation.request.hub.CreateHubRequest;
+import com.lms.eureka.hub.presentation.request.hub.SearchHubRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +21,24 @@ public class HubDomainService {
 
     @Transactional
     public Hub createHub(CreateHubRequest requestParam, String username) {
+        checkDuplicateField(requestParam);
+        Hub hub = saveHub(requestParam, username);
+        return hub;
+    }
+
+    private void checkDuplicateField(CreateHubRequest requestParam) {
+        if (hubRepository.findByName(requestParam.name()).isPresent()){
+            throw new HubException(HubExceptionCase.DUPLICATE_NAME);
+        }
+        if (hubRepository.findByAddress(requestParam.address()).isPresent()) {
+            throw new HubException(HubExceptionCase.DUPLICATE_ADDRESS);
+        }
+        if (hubRepository.findByRouteIndex(requestParam.routeIndex()).isPresent()) {
+            throw new HubException(HubExceptionCase.DUPLICATE_ROUTE_INDEX);
+        }
+    }
+
+    private Hub saveHub(CreateHubRequest requestParam, String username) {
         Hub hub = Hub.create(
                 requestParam.name(),
                 requestParam.address(),
@@ -34,7 +52,21 @@ public class HubDomainService {
 
     @Transactional(readOnly = true)
     public Hub findHub(UUID hubId) {
-        return hubRepository.findById(hubId)
+        return findHubById(hubId);
+    }
+
+    @Transactional(readOnly = true)
+    public Hub findHub(String hubName) {
+        return findHubByName(hubName);
+    }
+
+    private Hub findHubById(UUID hubId) {
+        return hubRepository.findByIdAndIsDeleteFalse(hubId)
+                .orElseThrow(() -> new HubException(HubExceptionCase.HUB_NOT_FOUND));
+    }
+
+    private Hub findHubByName(String hubName) {
+        return hubRepository.findByNameAndIsDeleteFalse(hubName)
                 .orElseThrow(() -> new HubException(HubExceptionCase.HUB_NOT_FOUND));
     }
 
@@ -45,7 +77,7 @@ public class HubDomainService {
 
     @Transactional
     public Hub deleteHub(UUID hubId, String username) {
-        Hub hub = findHub(hubId);
+        Hub hub = findHubById(hubId);
         hub.delete(username);
         return hub;
     }

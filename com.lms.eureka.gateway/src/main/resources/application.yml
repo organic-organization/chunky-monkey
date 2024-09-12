@@ -14,6 +14,7 @@ spring:
           uri: lb://hub-service
           predicates:
             - Path=/api/{role}/hubs/**
+            - Path=/api/{role}/hub-routes/**
         - id: company-service
           uri: lb://company-service
           predicates:

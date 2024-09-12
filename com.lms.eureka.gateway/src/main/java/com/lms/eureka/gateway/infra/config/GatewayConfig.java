@@ -22,7 +22,7 @@ public class GatewayConfig {
                                         jwtAuthorizationFilter.filter(exchange).then(chain.filter(exchange))))
                                 .uri("lb://user-service"))
                 .route(
-                        "hub-service", route -> route.path("/api/{role}/hubs/**")
+                        "hub-service", route -> route.path("/api/{role}/hubs/**", "/api/{role}/hub-routes/**")
                                 .filters(filter -> filter.filter((exchange, chain)
                                         ->
                                         jwtAuthorizationFilter.filter(exchange).then(chain.filter(exchange))))
