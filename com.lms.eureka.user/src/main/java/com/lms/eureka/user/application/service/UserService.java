@@ -139,4 +139,12 @@ public class UserService {
 
         user.updatePassword(passwordEncoder.encode(requestDto.newPassword()));
     }
+
+    public boolean checkUserByUsername(String username) {
+        return userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean checkUserByUserId(Long userId) {
+        return userRepository.findById(userId).isPresent();
+    }
 }
