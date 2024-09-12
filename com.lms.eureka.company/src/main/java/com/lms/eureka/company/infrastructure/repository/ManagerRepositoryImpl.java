@@ -32,7 +32,7 @@ public class ManagerRepositoryImpl implements QueryDslManagerRepository{
                         companyManager.userId
                 )
                 .from(companyManager)
-                .where(companyManager.deletedBy.isNull())
+                .where(companyManager.deletedAt.isNull())
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
