@@ -111,7 +111,7 @@ public class CompanyController {
         Long userId = companyManagerCreateRequest.userId();
 
         // TODO: UserClient에서 userId로 조회
-        // userClient.findById(userId);
+         userClient.getUser(userId);
 
         return CommonResponse
                 .success(HttpStatus.OK, companyService.createCompanyManager(companyId, companyManagerCreateRequest));

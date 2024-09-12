@@ -29,7 +29,7 @@ public class FeignApiController {
         }
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/userId/{userId}/")
     public CommonResponse<Void> getUserByUserId(@PathVariable("userId") Long userId) {
         boolean result = userService.getUserInfoByUserId(userId) != null;
 
