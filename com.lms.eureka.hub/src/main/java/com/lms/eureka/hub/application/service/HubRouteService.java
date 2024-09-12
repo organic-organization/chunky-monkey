@@ -35,5 +35,12 @@ public class HubRouteService {
         return hubRoutePage.map(hubRouteMapper::toDto);
     }
 
+    public HubRouteDto findHubRoute(SearchHubRouteRequest requestParam) {
+        Hub departureHub = hubDomainService.findHub(requestParam.departureHubName());
+        Hub arrivalHub = hubDomainService.findHub(requestParam.arrivalHubName());
+        HubRoute hubRoute = hubRouteDomainService.findHubRoute(departureHub, arrivalHub);
+        return hubRouteMapper.toDto(hubRoute);
+    }
+
 }
 

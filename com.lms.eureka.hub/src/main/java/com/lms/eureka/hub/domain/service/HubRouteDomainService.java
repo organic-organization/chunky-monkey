@@ -5,6 +5,7 @@ import com.lms.eureka.hub.domain.entity.hubRoute.HubRoute;
 import com.lms.eureka.hub.domain.repository.HubRouteRepository;
 import com.lms.eureka.hub.presentation.request.hubRoute.SearchHubRouteRequest;
 import java.time.Duration;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,17 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class HubRouteDomainService {
 
     private final HubRouteRepository hubRouteRepository;
+    private final HubDomainService hubDomainService;
 
     @Transactional
     public HubRoute createHubRoute(Hub departureHub, Hub arrivalHub, String username) {
-        String displayName = generateDisplayName(departureHub, arrivalHub);
         long distance = calculateDistance(departureHub, arrivalHub);
         Duration transitTime = calculateTransitTime(distance);
-        return saveHubRoute(departureHub, arrivalHub, displayName, distance, transitTime, username);
-    }
-
-    private String generateDisplayName(Hub departureHub, Hub arrivalHub) {
-        return String.format("%s To %s", departureHub.getName(), arrivalHub.getName());
+        return saveHubRoute(departureHub, arrivalHub, distance, transitTime, username);
     }
 
     private long calculateDistance(Hub departureHub, Hub arrivalHub) {
@@ -51,14 +48,58 @@ public class HubRouteDomainService {
         return Duration.ofMinutes(minutes);
     }
 
-    private HubRoute saveHubRoute(Hub departureHub, Hub arrivalHub, String displayName, long distance, Duration transitTime, String username) {
-        HubRoute hubRoute = HubRoute.create(departureHub, arrivalHub, displayName, distance, transitTime, username);
+    private HubRoute saveHubRoute(Hub departureHub, Hub arrivalHub, long distance, Duration transitTime,
+                                  String username) {
+        HubRoute hubRoute = HubRoute.create(departureHub, arrivalHub, distance, transitTime, username);
         return hubRouteRepository.save(hubRoute);
     }
 
     @Transactional(readOnly = true)
     public Page<HubRoute> searchHubRoute(SearchHubRouteRequest requestParam, Pageable pageable) {
         return hubRouteRepository.searchHubRoute(requestParam, pageable);
+    }
+
+    @Transactional
+    public HubRoute findHubRoute(Hub departureHub, Hub arrivalHub) {
+        Optional<HubRoute> hubRoute = hubRouteRepository.findByDepartureHubAndArrivalHubAndIsDeleteFalse(departureHub,
+                arrivalHub);
+        if (hubRoute.isPresent()) {
+            return hubRoute.get();
+        }
+        return makeNewHubRoute(departureHub, arrivalHub);
+    }
+
+    private HubRoute makeNewHubRoute(Hub departureHub, Hub arrivalHub) {
+        long startIndex = Math.min(departureHub.getRouteIndex(), arrivalHub.getRouteIndex());
+        long endIndex = Math.max(departureHub.getRouteIndex(), arrivalHub.getRouteIndex());
+
+        if (endIndex - startIndex == 1) {
+            // Direct route
+            long distance = calculateDistance(departureHub, arrivalHub);
+            Duration transitTime = calculateTransitTime(distance);
+            return saveHubRoute(departureHub, arrivalHub, distance, transitTime, "system");
+        } else {
+            // Composite route
+            long midIndex = (startIndex + endIndex) / 2;
+            Hub midHub = hubDomainService.findHub(midIndex);
+
+            HubRoute firstHalf = findHubRoute(departureHub, midHub);
+            HubRoute secondHalf = findHubRoute(midHub, arrivalHub);
+
+            long totalDistance = firstHalf.getDistance() + secondHalf.getDistance();
+            Duration totalTransitTime = firstHalf.getTransitTime().plus(secondHalf.getTransitTime());
+
+            HubRoute parentRoute = saveHubRoute(departureHub, arrivalHub, totalDistance, totalTransitTime, "system");
+
+            parentRoute.getSubRoutes().add(firstHalf);
+            parentRoute.getSubRoutes().add(secondHalf);
+            firstHalf.setParentRoute(parentRoute);
+            secondHalf.setParentRoute(parentRoute);
+
+            hubRouteRepository.save(firstHalf);
+            hubRouteRepository.save(secondHalf);
+            return hubRouteRepository.save(parentRoute);
+        }
     }
 
 }
