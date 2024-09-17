@@ -9,6 +9,9 @@ spring:
       server:
         native:
           search-locations: classpath:/config-repo
+      discovery:
+        enabled: false
+      uri: http://localhost:8888
   profiles:
     active: native
 
@@ -24,4 +27,4 @@ management:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:19090/eureka/
+      defaultZone: http://localhost:8761/eureka/
