@@ -1,6 +1,6 @@
 package com.lms.eureka.order.application.service;
 
-import com.lms.eureka.order.application.client.UserClient;
+import com.lms.eureka.order.application.client.CompanyClient;
 import com.lms.eureka.order.domain.exception.OrderException;
 import com.lms.eureka.order.domain.exception.OrderExceptionCase;
 import com.lms.eureka.order.presentation.reponse.CommonResponse;
@@ -10,18 +10,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class CompanyService {
+    private final CompanyClient companyClient;
 
-    private final UserClient userClient;
-
-    public void checkUserExists(String username) {
-        if (!userClient.getUser(username).getStatus().equals(HttpStatus.OK)) {
-            throw new OrderException(OrderExceptionCase.USER_NOT_FOUND);
-        }
-    }
-
-    public String getUserSlackId(String username) {
-        CommonResponse<String> response = userClient.getSlackId(username);
+    public String getCompany(String username) {
+        CommonResponse<String> response = companyClient.getCompany(username);
 
         if (!response.getStatus().equals(HttpStatus.OK)) {
             throw new OrderException(OrderExceptionCase.USER_NOT_FOUND);
@@ -29,5 +22,4 @@ public class UserService {
 
         return response.getData();
     }
-
 }

@@ -27,6 +27,13 @@ public class CommonResponse<T> {
                 .build();
     }
 
+    public static <T> CommonResponse<T> success(T data) {
+        return CommonResponse.<T>builder()
+                .status(HttpStatus.OK)
+                .data(data)
+                .build();
+    }
+
     public static <T> CommonResponse<T> success(String message) {
         return CommonResponse.<T>builder()
                 .status(HttpStatus.OK)

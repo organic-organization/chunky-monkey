@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,5 +19,9 @@ public class OrderProductDomainService {
         List<OrderProduct> saveOrderProducts = orderProductRepository.saveAll(
                 list.stream().map(dto -> dto.toEntity(username)).toList()
         );
+    }
+
+    public List<OrderProductDto> getProductListByOrderId(UUID orderId) {
+        return orderProductRepository.findAllByOrder_OrderId(orderId).stream().map(OrderProductDto::from).toList();
     }
 }

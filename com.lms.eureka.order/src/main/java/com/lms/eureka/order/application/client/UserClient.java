@@ -11,4 +11,6 @@ public interface UserClient {
     @GetMapping("api/user/{username}")
     CommonResponse getUser(@PathVariable("username") String username);
 
+    @GetMapping("api/user/slack/{username}")
+    CommonResponse<String> getSlackId(@PathVariable("username") String username);
 }
