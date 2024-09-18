@@ -1,7 +1,9 @@
 package com.lms.eureka.delivery.presentation.request;
 
+import java.util.UUID;
+
 public record SearchHubRouteRequest(
-        String departureHubName,
-        String arrivalHubName
+        UUID arrivalHubId,
+        UUID departureHubId
 ) {
 }

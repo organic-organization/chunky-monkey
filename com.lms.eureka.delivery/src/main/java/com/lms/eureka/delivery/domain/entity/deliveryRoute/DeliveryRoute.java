@@ -5,6 +5,7 @@ import com.lms.eureka.delivery.domain.entity.type.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Duration;
 import java.util.UUID;
 
 @Getter
@@ -34,4 +35,34 @@ public class DeliveryRoute extends BaseEntity {
 
     @Column(name = "end_hub_id", nullable = false)
     private UUID endHubId;
+
+    @Column(name = "expected_distance", nullable = false)
+    private long expectedDistance;
+
+    @Column(name = "expected_duration", nullable = false)
+    private Duration expectedDuration;
+
+    @Setter
+    @Column(name = "actual_distance")
+    private long actualDistance;
+
+    @Setter
+    @Column(name = "actual_duration")
+    private Duration actualDuration;
+
+    @Setter
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
+    public static DeliveryRoute create(UUID deliveryId, OrderStatus orderStatus, UUID startHubId, UUID endHubId, long expectedDistance, Duration expectedDuration) {
+        return DeliveryRoute.builder()
+                .deliveryId(deliveryId)
+                .orderStatus(orderStatus)
+                .startHubId(startHubId)
+                .endHubId(endHubId)
+                .expectedDistance(expectedDistance)
+                .expectedDuration(expectedDuration)
+                .isDeleted(false)
+                .build();
+    }
 }

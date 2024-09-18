@@ -11,9 +11,8 @@ import org.springframework.stereotype.Service;
 public class DeliveryDomainService {
     private final DeliveryRepository deliveryRepository;
 
-    public DeliveryDto createDelivery(Delivery entity) {
-        Delivery delivery = deliveryRepository.save(entity);
-
+    public DeliveryDto createDelivery(DeliveryDto dto) {
+        Delivery delivery = deliveryRepository.save(dto.toEntity());
         return DeliveryDto.from(delivery);
     }
 }
