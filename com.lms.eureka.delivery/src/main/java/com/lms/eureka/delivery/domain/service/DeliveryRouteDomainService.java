@@ -1,7 +1,6 @@
 package com.lms.eureka.delivery.domain.service;
 
 import com.lms.eureka.delivery.application.dto.DeliveryRouteDto;
-import com.lms.eureka.delivery.domain.entity.deliveryRoute.DeliveryRoute;
 import com.lms.eureka.delivery.domain.repository.DeliveryRouteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

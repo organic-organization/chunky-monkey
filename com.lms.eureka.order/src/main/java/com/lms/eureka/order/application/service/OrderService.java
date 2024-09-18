@@ -1,7 +1,5 @@
 package com.lms.eureka.order.application.service;
 
-import com.lms.eureka.order.application.client.CompanyClient;
-import com.lms.eureka.order.application.client.DeliveryClient;
 import com.lms.eureka.order.application.dto.OrderDto;
 import com.lms.eureka.order.application.dto.OrderProductDto;
 import com.lms.eureka.order.domain.service.OrderDomainService;
