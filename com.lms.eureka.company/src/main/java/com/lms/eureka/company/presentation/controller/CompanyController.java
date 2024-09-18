@@ -73,6 +73,11 @@ public class CompanyController {
                                         @RequestBody CompanyUpdateRequest companyUpdateRequest,
                                         HttpServletRequest request) {
         String username = request.getHeader("username");
+        CommonResponse userResponse = userClient.getUserByUsername(username);
+        if(!userResponse.getStatus().equals(HttpStatus.OK)) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "사용자 조회 실패: username 값이 존재하지 않음.");
+        }
         return CommonResponse
                 .success("업체 수정 완료", companyService.modifyCompany(companyId, companyUpdateRequest, username));
     }
@@ -81,6 +86,11 @@ public class CompanyController {
     public CommonResponse deleteCompany(@RequestBody CompanyDeleteRequest companyDeleteRequest,
                                         HttpServletRequest request) {
         String username = request.getHeader("username");
+        CommonResponse userResponse = userClient.getUserByUsername(username);
+        if(!userResponse.getStatus().equals(HttpStatus.OK)) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "사용자 조회 실패: username 값이 존재하지 않음.");
+        }
         return CommonResponse
                 .success("업체 삭제 완료.", companyService.deleteCompany(companyDeleteRequest, username));
     }
@@ -90,6 +100,11 @@ public class CompanyController {
                                                 @RequestBody List<CompanyProductCreateRequest> companyProductCreateRequests,
                                                 HttpServletRequest request) {
         String username = request.getHeader("username");
+        CommonResponse userResponse = userClient.getUserByUsername(username);
+        if(!userResponse.getStatus().equals(HttpStatus.OK)) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "사용자 조회 실패: username 값이 존재하지 않음.");
+        }
         return CommonResponse
                 .success("상품 추가 완료.", companyService.createCompanyProduct(companyId, companyProductCreateRequests, username));
     }
@@ -114,6 +129,11 @@ public class CompanyController {
                                                 @RequestBody CompanyProductUpdateRequest companyProductUpdateRequest,
                                                HttpServletRequest request) {
         String username = request.getHeader("username");
+        CommonResponse userResponse = userClient.getUserByUsername(username);
+        if(!userResponse.getStatus().equals(HttpStatus.OK)) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "사용자 조회 실패: username 값이 존재하지 않음.");
+        }
         return CommonResponse
                 .success("상품 수정 완료", companyService.modifyCompanyProduct(companyId, productId, companyProductUpdateRequest, username));
     }
@@ -123,6 +143,11 @@ public class CompanyController {
                                                 @RequestBody List<CompanyProductDeleteRequest> companyProductDeleteRequests,
                                                 HttpServletRequest request) {
         String username = request.getHeader("username");
+        CommonResponse userResponse = userClient.getUserByUsername(username);
+        if(!userResponse.getStatus().equals(HttpStatus.OK)) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "사용자 조회 실패: username 값이 존재하지 않음.");
+        }
         return CommonResponse
                 .success(companyService.deleteCompanyProducts(companyId, companyProductDeleteRequests, username));
     }
@@ -135,6 +160,11 @@ public class CompanyController {
         userClient.getUserByUserId(userId);
 
         String username = request.getHeader("username");
+        CommonResponse userResponse = userClient.getUserByUsername(username);
+        if(!userResponse.getStatus().equals(HttpStatus.OK)) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "사용자 조회 실패: username 값이 존재하지 않음.");
+        }
         return CommonResponse
                 .success(companyService.createCompanyManager(companyId, companyManagerCreateRequest, username));
     }
@@ -158,6 +188,11 @@ public class CompanyController {
                                                @RequestBody List<CompanyManagerDeleteRequest> companyManagerDeleteRequests,
                                                HttpServletRequest request) {
         String username = request.getHeader("username");
+        CommonResponse userResponse = userClient.getUserByUsername(username);
+        if(!userResponse.getStatus().equals(HttpStatus.OK)) {
+            return CommonResponse
+                    .failure(HttpStatus.NOT_FOUND, "사용자 조회 실패: username 값이 존재하지 않음.");
+        }
         return CommonResponse
                 .success("업체 담당자 삭제 완료", companyService.deleteCompanyManagers(companyId, companyManagerDeleteRequests, username));
     }

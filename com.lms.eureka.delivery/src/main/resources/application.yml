@@ -1,9 +1,9 @@
 server:
-  port: 19100
+  port: 19099
 
 spring:
   application:
-    name: slack-service
+    name: delivery-service
   profiles:
     active: dev
   config:
