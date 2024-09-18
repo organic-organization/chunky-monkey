@@ -11,6 +11,7 @@ public record CreateDeliveryRequestDto(
         UUID orderId,
         OrderStatus orderStatus,
         String deliveryDestination,
+        UUID requestCompanyId,
         UUID recipientCompanyId,
         String recipientSlackId
 ) {
@@ -19,6 +20,7 @@ public record CreateDeliveryRequestDto(
                 .orderId(saveOrderDto.orderId())
                 .orderStatus(saveOrderDto.orderStatus())
                 .deliveryDestination(saveOrderDto.deliveryDestination())
+                .requestCompanyId(saveOrderDto.requestCompanyId())
                 .recipientCompanyId(saveOrderDto.recipientCompanyId())
                 .recipientSlackId(recipientSlackId)
                 .build();
