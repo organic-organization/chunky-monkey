@@ -17,7 +17,7 @@ public class UserDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        saveUsers();
+        //saveUsers();
     }
 
     private void saveUsers() {
