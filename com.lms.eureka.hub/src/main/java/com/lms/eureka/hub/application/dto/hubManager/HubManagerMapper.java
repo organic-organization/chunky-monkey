@@ -1,6 +1,6 @@
-package com.lms.eureka.hub.application.dto.hub;
+package com.lms.eureka.hub.application.dto.hubManager;
 
-import com.lms.eureka.hub.domain.entity.hub.HubManager;
+import com.lms.eureka.hub.domain.entity.hubManager.HubManager;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

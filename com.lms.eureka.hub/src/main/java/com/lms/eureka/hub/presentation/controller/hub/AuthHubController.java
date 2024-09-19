@@ -1,13 +1,16 @@
 package com.lms.eureka.hub.presentation.controller.hub;
 
+import static com.lms.eureka.hub.domain.success.HubSuccessCase.DELIVERY_AGENT_CREATE;
 import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_CREATE;
 import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_DELETE;
 import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_MANAGER_CREATE;
 
-import com.lms.eureka.hub.application.dto.hub.HubManagerDto;
+import com.lms.eureka.hub.application.dto.deliveryAgent.DeliveryAgentDto;
+import com.lms.eureka.hub.application.dto.hubManager.HubManagerDto;
 import com.lms.eureka.hub.presentation.reponse.CommonResponse;
 import com.lms.eureka.hub.application.dto.hub.HubDto;
 import com.lms.eureka.hub.application.service.HubService;
+import com.lms.eureka.hub.presentation.request.hub.CreateDeliveryAgentRequest;
 import com.lms.eureka.hub.presentation.request.hub.CreateHubManagerRequest;
 import com.lms.eureka.hub.presentation.request.hub.CreateHubRequest;
 import jakarta.validation.Valid;
@@ -48,6 +51,14 @@ public class AuthHubController {
                                            @RequestHeader(value = "username", required = true) String username) {
         HubManagerDto hubManagerDto = hubService.createHubManager(hubId, requestParam, username);
         return CommonResponse.success(HUB_MANAGER_CREATE.getMessage(), hubManagerDto);
+    }
+
+    @PostMapping("/master/hubs/{hubId}/delivery-agent")
+    public CommonResponse createDeliveryAgent(@Valid @PathVariable("hubId") UUID hubId,
+                                           @Valid @RequestBody CreateDeliveryAgentRequest requestParam,
+                                           @RequestHeader(value = "username", required = true) String username) {
+        DeliveryAgentDto deliveryAgentDto = hubService.createDeliveryAgent(hubId, requestParam, username);
+        return CommonResponse.success(DELIVERY_AGENT_CREATE.getMessage(), deliveryAgentDto);
     }
 
 }
