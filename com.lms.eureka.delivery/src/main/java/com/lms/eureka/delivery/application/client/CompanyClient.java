@@ -12,4 +12,7 @@ public interface CompanyClient {
 
     @GetMapping("api/company/{companyId}")
     CommonResponse<UUID> getCompany(@PathVariable("companyId") UUID companyId);
+
+    @GetMapping("api/company/username/{username}")
+    CommonResponse<UUID> getCompanyByUsername(@PathVariable("username") String username);
 }

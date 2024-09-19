@@ -53,4 +53,8 @@ public class Order extends BaseEntity {
         order.setCreatedBy(createdBy);
         return order;
     }
+
+    public void updateOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }

@@ -7,15 +7,19 @@ import com.lms.eureka.order.domain.service.OrderProductDomainService;
 import com.lms.eureka.order.presentation.reponse.OrderDetailResponseDto;
 import com.lms.eureka.order.presentation.reponse.OrderResponseDto;
 import com.lms.eureka.order.presentation.request.CreateDeliveryRequestDto;
+import com.lms.eureka.order.presentation.request.UpdateOrderRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService {
     private final OrderDomainService orderDomainService;
     private final OrderProductDomainService orderProductDomainService;
@@ -35,6 +39,7 @@ public class OrderService {
         deliveryService.createDelivery(CreateDeliveryRequestDto.from(saveOrderDto, recipientSlackId));
     }
 
+    @Transactional(readOnly = true)
     public Page<OrderResponseDto> getOrders(String username, Pageable pageable) {
         // company 호출 - 속해있는 company 조회
         String companyId = companyService.getCompany(username);
@@ -44,9 +49,17 @@ public class OrderService {
         return orders.map(OrderResponseDto::from);
     }
 
-    public OrderDetailResponseDto getOrderByOrderId(String orderId) {
+    @Transactional(readOnly = true)
+    public OrderDetailResponseDto getOrderByOrderId(UUID orderId) {
         OrderDto order = orderDomainService.getOrderByOrderId(orderId);
         List<OrderProductDto> orderProducts = orderProductDomainService.getProductListByOrderId(order.orderId());
+
+        return OrderDetailResponseDto.from(order, orderProducts);
+    }
+
+    public OrderDetailResponseDto updateOrder(String username, UUID orderId, UpdateOrderRequestDto request) {
+        OrderDto order = orderDomainService.updateOrder(orderId, request.orderStatus());
+        List<OrderProductDto> orderProducts = orderProductDomainService.updateProductByOrderProductId(orderId, request.updateOrderProductRequests());
 
         return OrderDetailResponseDto.from(order, orderProducts);
     }

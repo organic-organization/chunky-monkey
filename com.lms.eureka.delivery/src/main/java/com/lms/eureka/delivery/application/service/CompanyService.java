@@ -20,4 +20,8 @@ public class CompanyService {
 
         return map;
     }
+
+    public UUID getCompanyByUsername(String username) {
+        return companyClient.getCompanyByUsername(username).getData();
+    }
 }

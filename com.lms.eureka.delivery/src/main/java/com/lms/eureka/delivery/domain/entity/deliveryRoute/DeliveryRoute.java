@@ -30,6 +30,9 @@ public class DeliveryRoute extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
+    @Column(name = "delivery_manager_id", nullable = false)
+    private UUID deliveryManagerId;
+
     @Column(name = "start_hub_id", nullable = false)
     private UUID startHubId;
 
@@ -54,9 +57,10 @@ public class DeliveryRoute extends BaseEntity {
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
 
-    public static DeliveryRoute create(UUID deliveryId, OrderStatus orderStatus, UUID startHubId, UUID endHubId, long expectedDistance, Duration expectedDuration) {
+    public static DeliveryRoute create(UUID deliveryId, UUID deliveryManagerId, OrderStatus orderStatus, UUID startHubId, UUID endHubId, long expectedDistance, Duration expectedDuration) {
         return DeliveryRoute.builder()
                 .deliveryId(deliveryId)
+                .deliveryManagerId(deliveryManagerId)
                 .orderStatus(orderStatus)
                 .startHubId(startHubId)
                 .endHubId(endHubId)
@@ -64,5 +68,9 @@ public class DeliveryRoute extends BaseEntity {
                 .expectedDuration(expectedDuration)
                 .isDeleted(false)
                 .build();
+    }
+
+    public void updateStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }
