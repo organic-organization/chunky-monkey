@@ -40,7 +40,7 @@
 
 ## Infrastructure Architecture
 >
-![](https://velog.velcdn.com/images/dmitry__777/post/4f435b73-3584-4768-a9dc-6195df1a19fd/image.png)
+![](https://velog.velcdn.com/images/dmitry__777/post/e09e180f-155b-46b7-8b61-76ff9d81c97b/image.png)
 
 <br/>
 
