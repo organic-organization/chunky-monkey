@@ -27,7 +27,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUserName();
+        return user.getUsername();
     }
     // role에 따른 역할 부여
     @Override

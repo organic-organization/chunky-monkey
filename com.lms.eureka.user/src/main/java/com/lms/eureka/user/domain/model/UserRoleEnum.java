@@ -16,4 +16,14 @@ public enum UserRoleEnum {
     public String getAuthority() {
         return this.authority;
     }
+
+    public static UserRoleEnum fromString(String authority) {
+        for (UserRoleEnum role : UserRoleEnum.values()) {
+            if (role.getAuthority().equalsIgnoreCase(authority)) {
+                return role;
+            }
+        }
+
+        throw new IllegalArgumentException("No enum constant for authority: " + authority);
+    }
 }

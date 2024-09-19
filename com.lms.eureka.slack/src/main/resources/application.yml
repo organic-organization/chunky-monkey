@@ -1,0 +1,15 @@
+server:
+  port: 19100
+
+spring:
+  application:
+    name: slack-service
+  profiles:
+    active: dev
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
