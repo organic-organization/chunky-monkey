@@ -7,12 +7,14 @@ import com.lms.eureka.order.domain.service.OrderProductDomainService;
 import com.lms.eureka.order.presentation.reponse.OrderDetailResponseDto;
 import com.lms.eureka.order.presentation.reponse.OrderResponseDto;
 import com.lms.eureka.order.presentation.request.CreateDeliveryRequestDto;
+import com.lms.eureka.order.presentation.request.UpdateOrderRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,9 +46,16 @@ public class OrderService {
         return orders.map(OrderResponseDto::from);
     }
 
-    public OrderDetailResponseDto getOrderByOrderId(String orderId) {
+    public OrderDetailResponseDto getOrderByOrderId(UUID orderId) {
         OrderDto order = orderDomainService.getOrderByOrderId(orderId);
         List<OrderProductDto> orderProducts = orderProductDomainService.getProductListByOrderId(order.orderId());
+
+        return OrderDetailResponseDto.from(order, orderProducts);
+    }
+
+    public OrderDetailResponseDto updateOrder(String username, UUID orderId, UpdateOrderRequestDto request) {
+        OrderDto order = orderDomainService.updateOrder(orderId, request.orderStatus());
+        List<OrderProductDto> orderProducts = orderProductDomainService.updateProductByOrderProductId(orderId, request.updateOrderProductRequests());
 
         return OrderDetailResponseDto.from(order, orderProducts);
     }

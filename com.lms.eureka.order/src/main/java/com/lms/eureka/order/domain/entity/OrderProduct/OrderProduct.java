@@ -27,6 +27,7 @@ public class OrderProduct extends BaseEntity {
     @Column(name = "product_id", nullable = false)
     private UUID productId;
 
+    @Setter
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
@@ -44,5 +45,9 @@ public class OrderProduct extends BaseEntity {
         orderProduct.setCreatedBy(order.getCreatedBy());
 
         return orderProduct;
+    }
+
+    public void updateQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }
