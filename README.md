@@ -1,8 +1,8 @@
 ## Summary
-> - 애플리케이션 이름: (미정)
-> - 개발 기간: 2024-09-05 ~ 2024-09-19 (총 8일)
+> - 애플리케이션 이름: B2B 물류 시스템
+> - 개발 기간: 2024-09-05 ~ 2024-09-19 (총 8일 간)
 > - 개발 환경: IntelliJ IDEA
-> - API 테스트 도구: Postman
+> - API 테스트 도구: Postman, Swagger UI
 > - 빌드 도구: Gradle
 > - 협업 도구: GitHub
 > - JAVA 버전: 17
@@ -74,8 +74,11 @@
 <br/>
 
 ## Trouble Shooting
-![](https://velog.velcdn.com/images/dmitry__777/post/665c9278-a7d3-4542-86b8-bed9ef3d64ca/image.png)
-![](https://velog.velcdn.com/images/dmitry__777/post/71fc9d8e-7993-4098-837e-a62ff4b114cf/image.png)
-![](https://velog.velcdn.com/images/dmitry__777/post/1099be0d-f0b9-49cf-a55b-7a7cb6d1005f/image.png)
+> - 상황: MSA 환경에서 커스텀 응답 객체를 공통으로 사용
+> - 문제: 해당 응답 객체를 역직렬화하는 과정에서 생성자를 찾지 못하여 에러 발생
+> - 해결: 응답 객체의 생성자를 정의
+> ![](https://velog.velcdn.com/images/dmitry__777/post/665c9278-a7d3-4542-86b8-bed9ef3d64ca/image.png)
+> ![](https://velog.velcdn.com/images/dmitry__777/post/71fc9d8e-7993-4098-837e-a62ff4b114cf/image.png)
+> ![](https://velog.velcdn.com/images/dmitry__777/post/1099be0d-f0b9-49cf-a55b-7a7cb6d1005f/image.png)
 
 
