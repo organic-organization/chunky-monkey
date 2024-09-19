@@ -1,0 +1,15 @@
+package com.lms.eureka.hub.application.dto.hub;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public record HubManagerDto(UUID id,
+                     UUID hubId,
+                     Long userId,
+                     LocalDateTime createdAt,
+                     String createdBy,
+                     LocalDateTime updatedAt,
+                     String updatedBy,
+                     LocalDateTime deletedAt,
+                     String deletedBy) {
+}

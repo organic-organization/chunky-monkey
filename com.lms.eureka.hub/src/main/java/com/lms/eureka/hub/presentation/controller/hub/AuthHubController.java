@@ -2,10 +2,13 @@ package com.lms.eureka.hub.presentation.controller.hub;
 
 import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_CREATE;
 import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_DELETE;
+import static com.lms.eureka.hub.domain.success.HubSuccessCase.HUB_MANAGER_CREATE;
 
+import com.lms.eureka.hub.application.dto.hub.HubManagerDto;
 import com.lms.eureka.hub.presentation.reponse.CommonResponse;
 import com.lms.eureka.hub.application.dto.hub.HubDto;
 import com.lms.eureka.hub.application.service.HubService;
+import com.lms.eureka.hub.presentation.request.hub.CreateHubManagerRequest;
 import com.lms.eureka.hub.presentation.request.hub.CreateHubRequest;
 import jakarta.validation.Valid;
 import java.util.UUID;
@@ -37,6 +40,14 @@ public class AuthHubController {
                                     @RequestHeader(value = "username", required = true) String username) {
         HubDto hubDto = hubService.deleteHub(hubId, username);
         return CommonResponse.success(HUB_DELETE.getMessage(), hubDto);
+    }
+
+    @PostMapping("/master/hubs/{hubId}/hub-manager")
+    public CommonResponse createHubManager(@Valid @PathVariable("hubId") UUID hubId,
+                                           @Valid @RequestBody CreateHubManagerRequest requestParam,
+                                           @RequestHeader(value = "username", required = true) String username) {
+        HubManagerDto hubManagerDto = hubService.createHubManager(hubId, requestParam, username);
+        return CommonResponse.success(HUB_MANAGER_CREATE.getMessage(), hubManagerDto);
     }
 
 }

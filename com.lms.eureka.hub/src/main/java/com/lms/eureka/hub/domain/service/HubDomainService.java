@@ -1,9 +1,12 @@
 package com.lms.eureka.hub.domain.service;
 
 import com.lms.eureka.hub.domain.entity.hub.Hub;
+import com.lms.eureka.hub.domain.entity.hub.HubManager;
 import com.lms.eureka.hub.domain.exception.HubException;
 import com.lms.eureka.hub.domain.exception.HubExceptionCase;
+import com.lms.eureka.hub.domain.repository.HubManagerRepository;
 import com.lms.eureka.hub.domain.repository.HubRepository;
+import com.lms.eureka.hub.presentation.request.hub.CreateHubManagerRequest;
 import com.lms.eureka.hub.presentation.request.hub.CreateHubRequest;
 import com.lms.eureka.hub.presentation.request.hub.SearchHubRequest;
 import java.util.UUID;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class HubDomainService {
 
     private final HubRepository hubRepository;
+    private final HubManagerRepository hubManagerRepository;
 
     @Transactional
     public Hub createHub(CreateHubRequest requestParam, String username) {
@@ -92,4 +96,19 @@ public class HubDomainService {
         return hub;
     }
 
+    @Transactional
+    public HubManager createHubManager(UUID hubId, CreateHubManagerRequest requestParam, String username) {
+        Hub hub = findHub(hubId);
+        return saveHubManager(hub, requestParam, username);
+    }
+
+    private HubManager saveHubManager(Hub hub, CreateHubManagerRequest requestParam, String username) {
+        HubManager hubManager = HubManager.create(
+                hub,
+                requestParam.userId(),
+                username
+        );
+        hubManagerRepository.save(hubManager);
+        return hubManager;
+    }
 }
