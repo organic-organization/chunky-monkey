@@ -20,9 +20,7 @@ public class OrderProductDomainService {
     private final OrderProductRepository orderProductRepository;
 
     public void createOrderProduct(String username, OrderDto saveOrderDto, List<OrderProductDto> list) {
-        List<OrderProduct> saveOrderProducts = orderProductRepository.saveAll(
-                list.stream().map(dto -> dto.toEntity(username)).toList()
-        );
+        orderProductRepository.saveAll(list.stream().map(dto -> dto.toEntity(username)).toList());
     }
 
     public List<OrderProductDto> getProductListByOrderId(UUID orderId) {

@@ -13,6 +13,7 @@ public record DeliveryRouteDto(
         UUID deliveryRouteId,
         UUID deliveryId,
         int sequence,
+        UUID deliveryManagerId,
         OrderStatus orderStatus,
         UUID startHubId,
         UUID endHubId,
@@ -28,9 +29,10 @@ public record DeliveryRouteDto(
         LocalDateTime deletedAt,
         String deletedBy
 ) {
-    public static DeliveryRouteDto create(DeliveryDto deliveryDto, HubRouteDto hubRouteDto) {
+    public static DeliveryRouteDto create(DeliveryDto deliveryDto, HubRouteDto hubRouteDto, UUID deliveryManagerId) {
         return DeliveryRouteDto.builder()
                 .deliveryId(deliveryDto.deliveryId())
+                .deliveryManagerId(deliveryManagerId)
                 .orderStatus(deliveryDto.orderStatus())
                 .startHubId(deliveryDto.startHubId())
                 .endHubId(deliveryDto.endHubId())
@@ -44,6 +46,7 @@ public record DeliveryRouteDto(
         return DeliveryRouteDto.builder()
                 .deliveryId(deliveryRoute.getDeliveryId())
                 .sequence(deliveryRoute.getSequence())
+                .deliveryManagerId(deliveryRoute.getDeliveryManagerId())
                 .orderStatus(deliveryRoute.getOrderStatus())
                 .startHubId(deliveryRoute.getStartHubId())
                 .endHubId(deliveryRoute.getEndHubId())
@@ -62,6 +65,6 @@ public record DeliveryRouteDto(
     }
 
     public DeliveryRoute toEntity() {
-        return DeliveryRoute.create(deliveryId, orderStatus, startHubId, endHubId, expectedDistance, expectedDuration);
+        return DeliveryRoute.create(deliveryId, deliveryManagerId, orderStatus, startHubId, endHubId, expectedDistance, expectedDuration);
     }
 }

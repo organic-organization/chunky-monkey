@@ -56,4 +56,8 @@ public class Delivery extends BaseEntity {
                 .isDeleted(false)
                 .build();
     }
+
+    public void updateStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
 }
