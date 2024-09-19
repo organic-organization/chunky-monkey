@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -32,7 +31,7 @@ public class DeliveryRouteDomainService {
         return deliveryRouteRepository.findDeliveryManagerWhereMinCnt(startHubId);
     }
 
-    public Page<DeliveryRouteDto> getDeliveries(UUID deliveryManagerId, Pageable pageable) {
+    public Page<DeliveryRouteDto> getDeliveriesByDeliveryManager(UUID deliveryManagerId, Pageable pageable) {
 
         return deliveryRouteRepository.findAllByDeliveryManagerId(deliveryManagerId, pageable).map(DeliveryRouteDto::from);
     }

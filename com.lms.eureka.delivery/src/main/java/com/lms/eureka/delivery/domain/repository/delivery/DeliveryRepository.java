@@ -9,5 +9,5 @@ import java.util.UUID;
 
 public interface DeliveryRepository extends DeliveryJpaRepository {
     Page<Delivery> findAllByStartHubId(UUID startHubId, Pageable pageable);
-
+    Page<Delivery> findAllByRecipientCompanyId(UUID recipientCompanyId, Pageable pageable);
 }

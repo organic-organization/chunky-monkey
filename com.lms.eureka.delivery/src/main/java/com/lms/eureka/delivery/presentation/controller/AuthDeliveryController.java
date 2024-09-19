@@ -5,7 +5,6 @@ import com.lms.eureka.delivery.presentation.reponse.CommonResponse;
 import com.lms.eureka.delivery.presentation.reponse.DeliveryResponseDto;
 import com.lms.eureka.delivery.presentation.reponse.DeliveryRouteResponseDto;
 import com.lms.eureka.delivery.presentation.request.UpdateDeliveryStatusRequestDto;
-import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -42,7 +41,7 @@ public class AuthDeliveryController {
     }
 
     @GetMapping("/hub-manager/delivery")
-    public CommonResponse<Page<DeliveryResponseDto>> getDeliveriesByhubManager(
+    public CommonResponse<Page<DeliveryResponseDto>> getDeliveriesByHubManager(
             @RequestHeader(value = "username", required = true) String username,
             @ParameterObject @PageableDefault(
                     size = 10, sort = {"createAt"}, direction = Sort.Direction.DESC
@@ -51,13 +50,23 @@ public class AuthDeliveryController {
         return CommonResponse.success(deliveryService.getDeliveriesByhubManager(username, pageable).map(DeliveryResponseDto::from));
     }
 
-    @GetMapping("/company-manager/delivery/{deliveryManagerId}")
-    public CommonResponse<Page<DeliveryRouteResponseDto>> getDeliveries(
+    @GetMapping("/delivery-manager/delivery/{deliveryManagerId}")
+    public CommonResponse<Page<DeliveryRouteResponseDto>> getDeliveriesByDeliveryManager(
             @PathVariable("deliveryManagerId") UUID deliveryManagerId,
             @ParameterObject @PageableDefault(
                     size = 10, sort = {"createAt"}, direction = Sort.Direction.DESC
             ) Pageable pageable
     ){
-        return CommonResponse.success(deliveryService.getDeliveries(deliveryManagerId, pageable).map(DeliveryRouteResponseDto::from));
+        return CommonResponse.success(deliveryService.getDeliveriesByDeliveryManager(deliveryManagerId, pageable).map(DeliveryRouteResponseDto::from));
+    }
+
+    @GetMapping("/company-manager/delivery")
+    public CommonResponse<Page<DeliveryResponseDto>> getDeliveriesByCompanyManager(
+            @RequestHeader(value = "username", required = true) String username,
+            @ParameterObject @PageableDefault(
+                    size = 10, sort = {"createAt"}, direction = Sort.Direction.DESC
+            ) Pageable pageable
+    ){
+        return CommonResponse.success(deliveryService.getDeliveriesByCompanyManager(username, pageable).map(DeliveryResponseDto::from));
     }
 }

@@ -37,4 +37,8 @@ public class DeliveryDomainService {
     public Page<DeliveryDto> getDeliveriesByStartHubId(UUID startHubId, Pageable pageable) {
         return deliveryRepository.findAllByStartHubId(startHubId, pageable).map(DeliveryDto::from);
     }
+
+    public Page<DeliveryDto> getDeliveriesByCompanyManager(UUID companyId, Pageable pageable) {
+        return deliveryRepository.findAllByRecipientCompanyId(companyId, pageable).map(DeliveryDto::from);
+    }
 }

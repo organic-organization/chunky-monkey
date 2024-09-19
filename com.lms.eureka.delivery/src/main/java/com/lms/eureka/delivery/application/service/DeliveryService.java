@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.nio.channels.FileChannel;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -61,7 +62,13 @@ public class DeliveryService {
         return deliveryDomainService.getDeliveriesByStartHubId(startHubId, pageable);
     }
 
-    public Page<DeliveryRouteDto> getDeliveries(UUID deliveryManagerId, Pageable pageable) {
-        return deliveryRouteDomainService.getDeliveries(deliveryManagerId, pageable);
+    public Page<DeliveryRouteDto> getDeliveriesByDeliveryManager(UUID deliveryManagerId, Pageable pageable) {
+        return deliveryRouteDomainService.getDeliveriesByDeliveryManager(deliveryManagerId, pageable);
+    }
+
+    public Page<DeliveryDto> getDeliveriesByCompanyManager(String username, Pageable pageable) {
+        UUID companyId = companyService.getCompanyByUsername(username);
+
+        return deliveryDomainService.getDeliveriesByCompanyManager(companyId, pageable);
     }
 }
