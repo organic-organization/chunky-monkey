@@ -4,37 +4,17 @@ server:
 spring:
   application:
     name: delivery-service
-
-  h2:
-    console:
-      enabled: true
-      path: /h2
-
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:test;MODE=PostgreSQL
-    username: sa
-    password:
-
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
-# swagger
-springdoc:
-  swagger-ui:
-    path: /api-test
-    groups-order: asc
-  paths-to-match: /api/**
+  profiles:
+    active: dev
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
 
 # jwt
 jwt:
   secret:
     key: 09f001b9896c05dc6d2c353da804aa7e5d14622943889409dce157a8793af945067b8f07570c97529e1bed70ee339398c3fb576ba4547e2162ab9ea9aa365483
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:19090/eureka/
