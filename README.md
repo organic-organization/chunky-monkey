@@ -39,16 +39,11 @@
 <br/>
 
 ## Infrastructure Architecture
->
-![](https://velog.velcdn.com/images/dmitry__777/post/e09e180f-155b-46b7-8b61-76ff9d81c97b/image.png)
+>![](https://velog.velcdn.com/images/dmitry__777/post/e09e180f-155b-46b7-8b61-76ff9d81c97b/image.png)
 
 <br/>
 
 ## API Document
-### - Role-based Routing
-> - Gateway에서 요청 API Path에 있는 role 값을 기반으로 라우팅
-> - 비즈니스 로직에서 추가적인 인가 처리를 하지 않도록 설계
-
 ### - Swagger UI
 > - API 문서 생성 자동화 툴
 > - 웹 애플리케이션 실행 후 end-point, 요청 파라미터 등에 대한 정보를 확인
@@ -69,9 +64,14 @@
 <br/>
 
 ## Authentication and Authorization
-### -
-> -
+### - JWT
+> - JWT 토큰을 발행함으로써 인증 처리
 
+### - Role-based Routing
+> - Gateway에서 요청 API Path에 있는 role 값을 기반으로 라우팅
+> - 비즈니스 로직에서 추가적인 인가 처리를 하지 않도록 설계
+
+<br/>
 
 ## Trouble Shooting
 ![](https://velog.velcdn.com/images/dmitry__777/post/665c9278-a7d3-4542-86b8-bed9ef3d64ca/image.png)
