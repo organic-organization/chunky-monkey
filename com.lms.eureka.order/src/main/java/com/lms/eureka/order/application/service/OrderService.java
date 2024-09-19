@@ -12,12 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrderService {
     private final OrderDomainService orderDomainService;
     private final OrderProductDomainService orderProductDomainService;
@@ -37,6 +39,7 @@ public class OrderService {
         deliveryService.createDelivery(CreateDeliveryRequestDto.from(saveOrderDto, recipientSlackId));
     }
 
+    @Transactional(readOnly = true)
     public Page<OrderResponseDto> getOrders(String username, Pageable pageable) {
         // company 호출 - 속해있는 company 조회
         String companyId = companyService.getCompany(username);
@@ -46,6 +49,7 @@ public class OrderService {
         return orders.map(OrderResponseDto::from);
     }
 
+    @Transactional(readOnly = true)
     public OrderDetailResponseDto getOrderByOrderId(UUID orderId) {
         OrderDto order = orderDomainService.getOrderByOrderId(orderId);
         List<OrderProductDto> orderProducts = orderProductDomainService.getProductListByOrderId(order.orderId());
